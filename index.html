@@ -61,36 +61,18 @@ input::placeholder{color:#94A3B8}
   <div style="margin-top:16px;background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(160%);border:1px solid rgba(255,255,255,.75);border-radius:26px;padding:18px 16px 16px;box-shadow:0 24px 60px rgba(13,27,69,.22);animation:riseIn .6s .16s ease both">
   <sc-if value="{{loginPhone}}" hint-placeholder-val="{{ true }}">
     <div>
-      <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Вход по номеру телефона</div>
-      <div style="margin-top:4px;font-size:13px;color:#64748B">Отправим СМС с кодом подтверждения</div>
-      <div style="margin-top:14px;display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:16px;height:54px;padding:0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
-        <span style="font-size:17px;font-weight:600">+7</span>
-        <input value="{{phoneVal}}" onChange="{{onPhone}}" type="tel" placeholder="(999) 123-45-67" style="flex:1;border:none;outline:none;font-size:17px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+      <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Вход в личный кабинет</div>
+      <div style="margin-top:4px;font-size:13px;color:#64748B">Логин и пароль выдаёт администратор при заключении договора</div>
+      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Логин — например, ivanov.pa" autocapitalize="none" style="margin-top:14px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <div style="margin-top:9px;display:flex;align-items:center;gap:8px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:15px;height:52px;padding:0 8px 0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
+        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" placeholder="Пароль" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+        <div onClick="{{togglePwd}}" style="width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:{{pwdEyeOp}}" style-active="background:#F1F4F8">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" stroke="#64748B" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" stroke="#64748B" stroke-width="1.8"/></svg>
+        </div>
       </div>
-      <div onClick="{{sendCode}}" style="margin-top:11px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{sendBg}};box-shadow:{{sendSh}};cursor:pointer" style-active="transform:scale(.98)">Получить код</div>
+      <div onClick="{{doEnter}}" style="margin-top:11px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{enterBg}};box-shadow:{{enterSh}};cursor:pointer" style-active="transform:scale(.98)">Войти</div>
       <div onClick="{{toReg}}" style="margin-top:9px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14.5px;font-weight:600;color:#1E3A8A;background:rgba(37,99,235,.09);border:1px solid rgba(37,99,235,.18);cursor:pointer" style-active="transform:scale(.98)">Хочу учиться — оставить заявку</div>
-      <div style="margin-top:11px;text-align:center;font-size:13px;color:#64748B">Первый раз в приложении? <span onClick="{{toInvite}}" style="color:#2563EB;font-weight:600;cursor:pointer">Ввести код автошколы</span></div>
-    </div>
-  </sc-if>
-  <sc-if value="{{loginCode}}">
-    <div>
-      <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Введите код из СМС</div>
-      <div style="margin-top:4px;font-size:13px;color:#64748B">Отправили на +7 {{phoneVal}} · <span onClick="{{editPhone}}" style="color:#2563EB;font-weight:600;cursor:pointer">Изменить</span></div>
-      <div style="margin-top:16px;display:flex;gap:12px;justify-content:center">
-        <sc-for list="{{codeCells}}" as="c" hint-placeholder-count="4">
-          <input value="{{c.v}}" onChange="{{c.onChange}}" onKeyDown="{{c.onKey}}" ref="{{c.ref}}" type="tel" style="width:56px;height:62px;border-radius:16px;border:1.5px solid #E2E8F0;background:#FFFFFF;text-align:center;font-size:25px;font-weight:700;color:#0F1E3D;outline:none;padding:0;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
-        </sc-for>
-      </div>
-      <div onClick="{{resend}}" style="margin-top:14px;text-align:center;font-size:13.5px;color:#64748B;cursor:pointer">Отправить код ещё раз</div>
-    </div>
-  </sc-if>
-  <sc-if value="{{loginInvite}}">
-    <div>
-      <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Введите код автошколы</div>
-      <div style="margin-top:4px;font-size:13px;color:#64748B;line-height:1.45">Личный код выдаёт администратор при заключении договора — он активирует профиль, дальше вход по номеру.</div>
-      <input value="{{inviteVal}}" onChange="{{onInvite}}" placeholder="НВ-0000" style="margin-top:14px;width:100%;height:56px;border-radius:16px;border:1.5px solid #E2E8F0;background:#FFFFFF;text-align:center;font-size:23px;font-weight:800;letter-spacing:4px;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
-      <div onClick="{{inviteGo}}" style="margin-top:11px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{inviteBg}};box-shadow:{{inviteSh}};cursor:pointer" style-active="transform:scale(.98)">Активировать профиль</div>
-      <div onClick="{{backToPhone}}" style="margin-top:12px;text-align:center;font-size:13.5px;color:#64748B;cursor:pointer">У меня уже есть аккаунт — <span style="color:#2563EB;font-weight:600">войти</span></div>
+      <div style="margin-top:11px;text-align:center;font-size:12.5px;color:#94A3B8">Забыли пароль? Обратитесь к администратору филиала</div>
     </div>
   </sc-if>
   <sc-if value="{{loginReg}}">
@@ -703,7 +685,7 @@ input::placeholder{color:#94A3B8}
   <sc-if value="{{isAdmin}}">
     <div onClick="{{toAdmin}}" style="border-radius:20px;padding:16px 18px;background:linear-gradient(135deg,#12275C 0%,#1E3A8A 55%,#2563EB 140%);display:flex;align-items:center;gap:13px;cursor:pointer;box-shadow:0 12px 30px rgba(30,58,138,.3)" style-active="transform:scale(.985)">
       <div style="width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;flex:none"><img src="assets/generated/i-key.webp" alt="" style="width:30px;height:30px;object-fit:contain"></div>
-      <div style="flex:1"><div style="font-size:15.5px;font-weight:700;color:#FFFFFF">Администрирование</div><div style="font-size:12.5px;color:rgba(255,255,255,.65);margin-top:1px">Коды доступа · ученики · инструкторы</div></div>
+      <div style="flex:1"><div style="font-size:15.5px;font-weight:700;color:#FFFFFF">Администрирование</div><div style="font-size:12.5px;color:rgba(255,255,255,.65);margin-top:1px">Доступы · ученики · инструкторы</div></div>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M9 6l6 6-6 6" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </sc-if>
@@ -746,7 +728,7 @@ input::placeholder{color:#94A3B8}
 <div style="flex:1;overflow-y:auto;padding:4px 16px 20px;display:flex;flex-direction:column;gap:12px">
   <sc-if value="{{segCodes}}" hint-placeholder-val="{{ true }}">
     <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;flex-direction:column;gap:13px">
-      <div style="font-size:16px;font-weight:700">Новый код доступа</div>
+      <div style="font-size:16px;font-weight:700">Новый доступ в приложение</div>
       <div>
         <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Кому выдаём код</div>
         <div style="display:flex;gap:8px">
@@ -795,14 +777,17 @@ input::placeholder{color:#94A3B8}
           </div>
         </div>
       </sc-if>
-      <div onClick="{{admGen}}" style="height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:600;color:#FFFFFF;background:{{admBg}};box-shadow:{{admSh}};cursor:pointer" style-active="transform:scale(.98)">Сформировать код</div>
+      <div onClick="{{admGen}}" style="height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:600;color:#FFFFFF;background:{{admBg}};box-shadow:{{admSh}};cursor:pointer" style-active="transform:scale(.98)">Сформировать доступ</div>
     </div>
     <sc-if value="{{admHasCode}}">
       <div style="background:#FFFFFF;border:1.5px dashed #93B4F5;border-radius:20px;padding:20px;display:flex;flex-direction:column;align-items:center;animation:popIn .35s ease;position:relative;overflow:hidden;flex:none">
         <img src="assets/generated/d6-key.webp" alt="" style="position:absolute;right:-6px;bottom:2px;width:84px;opacity:.55;pointer-events:none;transform:rotate(-8deg)">
-        <div style="font-size:12px;font-weight:600;color:#64748B">Код для: {{admCodeFor}}</div>
-        <div style="margin-top:8px;font-size:34px;font-weight:800;letter-spacing:5px;color:#1E3A8A">{{admCode}}</div>
-        <div style="margin-top:5px;font-size:12.5px;color:#64748B;text-align:center">{{admCodeSub}}</div>
+        <div style="font-size:12px;font-weight:600;color:#64748B">Доступ для: {{admCodeFor}}</div>
+        <div style="margin-top:10px;width:100%;display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#F5F8FF;border-radius:12px;padding:9px 14px"><span style="font-size:12px;font-weight:600;color:#64748B">Логин</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:16px;font-weight:800;color:#1E3A8A">{{admLogin}}</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#F5F8FF;border-radius:12px;padding:9px 14px"><span style="font-size:12px;font-weight:600;color:#64748B">Пароль</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:16px;font-weight:800;color:#1E3A8A">{{admPass}}</span></div>
+        </div>
+        <div style="margin-top:8px;font-size:12.5px;color:#64748B;text-align:center">{{admCodeSub}}</div>
         <div style="margin-top:14px;display:flex;gap:9px;width:100%">
           <div onClick="{{admCopy}}" style="flex:1;height:44px;border-radius:13px;background:#EFF4FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Скопировать</div>
           <div onClick="{{admReset}}" style="flex:1;height:44px;border-radius:13px;background:#F1F4F8;color:#0F1E3D;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Выдать ещё</div>
@@ -1000,18 +985,23 @@ class Component extends DCLogic {
   ];
   SC = {'У-1':'u1','У-2':'u2','У-3':'u3','У-4':'u4','У-5':'u5','У-6':'u6','У-7':'u7','У-8':'u8','У-10':'u10','У-11':'u11','У-12':'u12','А-1':'u13'};
   CODES = {u1:'У-1',u2:'У-2',u3:'У-3',u4:'У-4',u5:'У-5',u6:'У-6',u7:'У-7',u8:'У-8',u10:'У-10',u10t:'У-10',u10q:'У-10',u11:'У-11',u12:'У-12',u13:'А-1'};
-  genCode(){ const A = 'АВЕКМНРСТХ', D = '23456789', r = (s) => s[Math.floor(Math.random() * s.length)]; return 'НВ-' + r(A) + r(D) + r(A) + r(D); }
-  codeRefs = [React.createRef(),React.createRef(),React.createRef(),React.createRef()];
+  translit(s){ const m = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'}; return s.toLowerCase().split('').map(c => m[c] !== undefined ? m[c] : c).join(''); }
+  genLogin(fio){
+    const p = fio.trim().split(/\s+/);
+    const sur = this.translit(p[0] || '').replace(/[^a-z]/g,'');
+    const ini = p.slice(1,3).map(w => this.translit((w[0] || ''))).join('').replace(/[^a-z]/g,'');
+    return sur + (ini ? '.' + ini : '');
+  }
+  genPass(){ const C = 'bdfgkmnprstvz', V = 'aeiou', D = '23456789', r = (s) => s[Math.floor(Math.random() * s.length)]; return r(C)+r(V)+r(C)+r(V)+r(C)+'-'+r(D)+r(D); }
   INITIAL(){
     return {
-      screen:'u1', loginStep:'phone', phone:'', code:['','','',''], regName:'',
+      screen:'u1', loginStep:'phone', phone:'', lgn:'', pwd:'', showPwd:false, regName:'',
       bType:'extra', resched:false, instId:'sergey', day:0, slot:null,
       fBr:'Все', fGb:'Все',
       pay:'methods', paying:false, booked:null,
       nextLesson:{date:'Завтра',time:'17:00–18:30'},
       gDate:0, gibddSent:false, seg:'future',
       tDone:14, tq:{i:0, sel:null, corr:0, done:false, topic:15},
-      invite:'',
       aSeg:'codes', admName:'', admRole:'Ученик', admBr:'Ясенево', admGrp:'Б-142', admPkg:'Город · 28 ч', admInst:'Сергей Петров', admCode:null, issued:[], stuInst:{}, instSheet:null,
       cityHours:12, dopHours:2, pkgTotal:28, paySheet:false, payPick:1, topStep:'pick', topMethod:'sbp',
       cancelSheet:false, cancelN:0, brShow:false, notifOn:true,
@@ -1037,9 +1027,6 @@ class Component extends DCLogic {
     if (pp && pp.startScreen !== this.props.startScreen){
       const t = this.SC[this.props.startScreen];
       if (t) this.jump(t);
-    }
-    if (ps && ps.loginStep !== 'code' && this.state.loginStep === 'code'){
-      const r = this.codeRefs[0].current; if (r) r.focus();
     }
     if (ps && ps.screen !== 'u1' && this.state.screen === 'u1') this._kickVideo();
   }
@@ -1116,22 +1103,8 @@ class Component extends DCLogic {
       .filter(i => st.fGb === 'Все' || i.gb === st.fGb)
       .map(i => ({...i, meta: i.car + ' · ' + i.gb + ' · м. ' + i.br, ph: 'Фото: ' + i.name.split(' ')[0],
         onPick: () => { this.setState({instId:i.id, day:0, slot:null}); this.go('u5'); }}));
-    const codeCells = st.code.map((v,i) => ({
-      v, ref: this.codeRefs[i],
-      onChange: (e) => {
-        const d = e.target.value.replace(/\D/g,'').slice(-1);
-        const code = [...this.state.code]; code[i] = d;
-        this.setState({code});
-        if (d && i < 3){ const r = this.codeRefs[i+1].current; if (r) r.focus(); }
-        if (code.every(x => x)) setTimeout(() => this.setState({screen:'u2', hist:[]}), 350);
-      },
-      onKey: (e) => {
-        if (e.key === 'Backspace' && !this.state.code[i] && i > 0){
-          const r = this.codeRefs[i-1].current; if (r) r.focus();
-        }
-      }
-    }));
     const phoneReady = st.phone.length === 10;
+    const loginReady = st.lgn.trim().length > 0 && st.pwd.length >= 4;
     const isExtra = st.bType === 'extra' && !st.resched;
     const bookLabel = st.resched ? 'Перенос занятия' : (st.bType === 'extra' ? 'Доп занятие · 2 000 ₽' : 'Занятие по пакету');
     const gDatesRaw = [{label:'Вт, 11 августа', seats:'Мест: 3 из 10'}, {label:'Чт, 27 августа', seats:'Мест: 10 из 10'}];
@@ -1139,7 +1112,6 @@ class Component extends DCLogic {
       bd: st.gDate === i ? '#2563EB' : '#E2E8F0', bg: st.gDate === i ? '#F5F8FF' : '#FFFFFF',
       radio: st.gDate === i ? '6px solid #2563EB' : '2px solid #CBD5E1',
       onTap: () => this.setState({gDate:i})}));
-    const inviteReady = st.invite.replace(/[^А-ЯA-Z0-9]/gi,'').length >= 6;
     const admReady = st.admName.trim().split(/\s+/).length >= 2;
     const admIsStudent = st.admRole === 'Ученик';
     const admRoleChips = ['Ученик','Инструктор'].map(b => ({label:b, ...this.chip(st.admRole === b), onTap:() => this.setState({admRole:b, admCode:null})}));
@@ -1150,7 +1122,7 @@ class Component extends DCLogic {
     const admInstChips = this.INST.map(i => ({label: surname(i.name), ...this.chip(st.admInst === i.name), onTap: () => this.setState({admInst: i.name})}));
     const issuedRows = st.issued.map(p => ({role:p.role, name:p.name, inst:p.inst,
       sub:(p.role === 'Ученик' ? p.grp + ' · ' : '') + p.br + (p.role === 'Ученик' ? ' · пакет ' + p.pkg.split('· ')[1] : ''),
-      status:'Код выдан', sBg:'#EFF4FF', sC:'#2563EB', code:p.code, hasCode:true}));
+      status:'Доступ выдан', sBg:'#EFF4FF', sC:'#2563EB', code:p.login, hasCode:true}));
     const admStudents = [...issuedRows.filter(x => x.role === 'Ученик'),
       {name:'Анна Смирнова', sub:'Б-142 · Ясенево · пакет 28 ч', inst:'Сергей Петров', status:'Активна', sBg:'#EAFBF1', sC:'#15803D'},
       {name:'Игорь Волков', sub:'Б-142 · Тёплый Стан · пакет 40 ч', inst:'Дмитрий Соколов', status:'Ожидает оплаты', sBg:'#FEF6E7', sC:'#B45309'},
@@ -1161,7 +1133,7 @@ class Component extends DCLogic {
     });
     const admInstructors = [...issuedRows.filter(x => x.role === 'Инструктор'),
       ...this.INST.map(i => ({name:i.name, sub:i.br + ' · ' + i.car + ' · ' + i.gb, status:'Активен', sBg:'#EAFBF1', sC:'#15803D'}))];
-    const admSegs = [{k:'codes',l:'Коды'},{k:'students',l:'Ученики'},{k:'inst',l:'Инструкторы'}].map(s => ({label:s.l, ...this.chip(st.aSeg === s.k), onTap:() => this.setState({aSeg:s.k})}));
+    const admSegs = [{k:'codes',l:'Доступы'},{k:'students',l:'Ученики'},{k:'inst',l:'Инструкторы'}].map(s => ({label:s.l, ...this.chip(st.aSeg === s.k), onTap:() => this.setState({aSeg:s.k})}));
     const futureL = [
       st.nextLesson ? {when: st.nextLesson.date === 'Завтра' ? 'Завтра, воскресенье' : st.nextLesson.date, time: st.nextLesson.time, what:'Вождение (город)', who:'Сергей Петров', where:'м. Ясенево', isNew:false} : null,
       st.booked ? {when: st.booked.date, time: st.booked.time, what:'Доп занятие (город)', who: inst.name, where:'м. ' + inst.br, isNew:true} : null,
@@ -1187,26 +1159,24 @@ class Component extends DCLogic {
       s10t: scr === 'u10t', s10q: scr === 'u10q',
       s7pay: scr === 'u7' && st.pay === 'methods',
       s7ok: scr === 'u7' && st.pay === 'success',
-      loginPhone: st.loginStep === 'phone', loginCode: st.loginStep === 'code',
+      loginPhone: st.loginStep === 'phone',
       phoneVal: this.fmtPhone(st.phone),
       onPhone: (e) => this.setState({phone: e.target.value.replace(/\D/g,'').slice(0,10)}),
-      sendBg: phoneReady ? this.GRAD : '#B9C6E4',
-      sendSh: phoneReady ? this.CTASH : 'none',
-      sendCode: () => { if (phoneReady) this.setState({loginStep:'code'}); else this.showToast('Введите номер полностью'); },
-      editPhone: () => this.setState({loginStep:'phone', code:['','','','']}),
-      resend: () => this.showToast('Код отправлен повторно'),
       goBack: () => this.back(),
-      loginInvite: st.loginStep === 'invite',
-      toInvite: () => this.setState({loginStep:'invite'}),
       backToPhone: () => this.setState({loginStep:'phone'}),
-      inviteVal: st.invite,
-      onInvite: (e) => this.setState({invite: e.target.value.toUpperCase().slice(0,8)}),
-      inviteBg: inviteReady ? this.GRAD : '#B9C6E4',
-      inviteSh: inviteReady ? this.CTASH : 'none',
-      inviteGo: () => {
-        if (!inviteReady){ this.showToast('Введите код полностью — например, НВ-2415'); return; }
-        this.setState({loginStep:'phone', invite:''});
-        this.showToast('Код принят! Профиль активирован — войдите по номеру');
+      lgnVal: st.lgn,
+      onLgn: (e) => this.setState({lgn: e.target.value.replace(/\s/g,'').slice(0,40)}),
+      pwdVal: st.pwd,
+      onPwd: (e) => this.setState({pwd: e.target.value.slice(0,40)}),
+      pwdType: st.showPwd ? 'text' : 'password',
+      pwdEyeOp: st.showPwd ? '1' : '.55',
+      togglePwd: () => this.setState(s => ({showPwd: !s.showPwd})),
+      enterBg: loginReady ? this.GRAD : '#B9C6E4',
+      enterSh: loginReady ? this.CTASH : 'none',
+      doEnter: () => {
+        if (!st.lgn.trim()){ this.showToast('Введите логин'); return; }
+        if (st.pwd.length < 4){ this.showToast('Пароль — минимум 4 символа'); return; }
+        this.setState({screen:'u2', hist:[], pwd:'', showPwd:false});
       },
       loginReg: st.loginStep === 'reg',
       toReg: () => this.setState({loginStep:'reg'}),
@@ -1220,7 +1190,6 @@ class Component extends DCLogic {
         this.setState({loginStep:'phone', regName:''});
         this.showToast('Заявка отправлена! Администратор перезвонит в течение часа');
       },
-      codeCells,
       hasNext: !!st.nextLesson, noNext: !st.nextLesson,
       noFuture: futureL.length === 0,
       nextDate: st.nextLesson ? st.nextLesson.date : '', nextTime: st.nextLesson ? st.nextLesson.time : '',
@@ -1305,10 +1274,12 @@ class Component extends DCLogic {
       admSh: admReady ? this.CTASH : 'none',
       admGen: () => {
         if (!admReady){ this.showToast('Введите фамилию, имя и отчество'); return; }
-        const code = this.genCode();
-        this.setState(s => ({admCode: code, issued: [{name: s.admName.trim(), role: s.admRole, br: s.admBr, grp: s.admGrp, pkg: s.admPkg, inst: s.admInst, code}, ...s.issued]}));
+        const login = this.genLogin(st.admName), pass = this.genPass();
+        this.setState(s => ({admCode: {login, pass}, issued: [{name: s.admName.trim(), role: s.admRole, br: s.admBr, grp: s.admGrp, pkg: s.admPkg, inst: s.admInst, login}, ...s.issued]}));
       },
-      admCode: st.admCode, admHasCode: !!st.admCode, admNoCode: !st.admCode,
+      admLogin: st.admCode ? st.admCode.login : '',
+      admPass: st.admCode ? st.admCode.pass : '',
+      admHasCode: !!st.admCode, admNoCode: !st.admCode,
       admCodeFor: st.admName.trim(),
       admCodeSub: st.admRole + ' · ' + st.admBr + (admIsStudent ? ' · ' + st.admGrp + ' · пакет ' + st.admPkg.split('· ')[1] + ' · инстр. ' + surname(st.admInst) : ''),
       admInstChips,
@@ -1320,7 +1291,7 @@ class Component extends DCLogic {
         bd: st.instSheet && st.instSheet.cur === i.name ? '#2563EB' : '#E2E8F0',
         bg: st.instSheet && st.instSheet.cur === i.name ? '#F5F8FF' : '#FFFFFF',
         onTap: () => { const nm = st.instSheet.name; this.setState(s => ({stuInst: {...s.stuInst, [nm]: i.name}, instSheet:null})); this.showToast('Инструктор обновлён: ' + i.name); }})),
-      admCopy: () => this.showToast('Код скопирован в буфер'),
+      admCopy: () => this.showToast('Логин и пароль скопированы в буфер'),
       admReset: () => this.setState({admName:'', admCode:null}),
       admStudents, admInstructors,
       qTheoryOut: () => this.showToast('Откроется приложение ИСО ПРОФТЕХ'),
