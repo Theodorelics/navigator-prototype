@@ -50,7 +50,7 @@ input::placeholder{color:#94A3B8}
           <div style="margin-top:4px;font-size:10px;font-weight:700;letter-spacing:2.6px;color:#2563EB">СЕТЬ АВТОШКОЛ</div>
         </div>
       </div>
-      <div style="margin:9px auto 0;width:130px;height:3px;border-radius:2px;overflow:hidden;position:relative"><div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,#2563EB 0 14px,transparent 14px 26px);animation:roadMove 1s linear infinite;opacity:.5;width:200%"></div></div>
+      <div style="margin:9px auto 0;width:130px;height:3px;border-radius:2px;overflow:hidden;position:relative"><div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,#2563EB 0 16px,transparent 16px 30px);animation:roadMove 1s linear infinite;opacity:.5;width:200%"></div></div>
     </div>
   </div>
   <div style="flex:1"></div>
@@ -81,6 +81,7 @@ input::placeholder{color:#94A3B8}
       <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Регистрация по коду</div>
       <div style="margin-top:4px;font-size:13px;color:#64748B;line-height:1.45">Код выдаёт администратор при заключении договора. Введите его и придумайте пароль</div>
       <input value="{{invVal}}" onChange="{{onInv}}" placeholder="НВ-0000" style="margin-top:14px;width:100%;height:54px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;text-align:center;font-size:22px;font-weight:800;letter-spacing:4px;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Придумайте логин — например, anna.s" autocapitalize="none" style="margin-top:9px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
       <div style="margin-top:9px;display:flex;align-items:center;gap:8px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:15px;height:52px;padding:0 8px 0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
         <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" placeholder="Придумайте пароль" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
         <div onClick="{{togglePwd}}" style="width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:{{pwdEyeOp}}" style-active="background:#F1F4F8">
@@ -801,7 +802,7 @@ input::placeholder{color:#94A3B8}
         <div style="font-size:12px;font-weight:600;color:#64748B">Код регистрации для: {{admCodeFor}}</div>
         <div style="margin-top:8px;font-size:34px;font-weight:800;letter-spacing:5px;color:#1E3A8A">{{admCodeVal}}</div>
         <div style="margin-top:5px;font-size:12.5px;color:#64748B;text-align:center">{{admCodeSub}}</div>
-        <div style="margin-top:7px;background:#F5F8FF;border-radius:10px;padding:6px 12px;font-size:12px;color:#64748B">Логин после регистрации: <span style="font-family:ui-monospace,Menlo,monospace;font-weight:800;color:#1E3A8A">{{admCodeLogin}}</span></div>
+        <div style="margin-top:7px;background:#F5F8FF;border-radius:10px;padding:6px 12px;font-size:12px;color:#64748B;text-align:center">Ученик введёт код в приложении и сам придумает логин и пароль</div>
         <div style="margin-top:14px;display:flex;gap:9px;width:100%">
           <div onClick="{{admCopy}}" style="flex:1;height:44px;border-radius:13px;background:#EFF4FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Скопировать</div>
           <div onClick="{{admReset}}" style="flex:1;height:44px;border-radius:13px;background:#F1F4F8;color:#0F1E3D;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Выдать ещё</div>
@@ -999,13 +1000,6 @@ class Component extends DCLogic {
   ];
   SC = {'У-1':'u1','У-2':'u2','У-3':'u3','У-4':'u4','У-5':'u5','У-6':'u6','У-7':'u7','У-8':'u8','У-10':'u10','У-11':'u11','У-12':'u12','А-1':'u13'};
   CODES = {u1:'У-1',u2:'У-2',u3:'У-3',u4:'У-4',u5:'У-5',u6:'У-6',u7:'У-7',u8:'У-8',u10:'У-10',u10t:'У-10',u10q:'У-10',u11:'У-11',u12:'У-12',u13:'А-1'};
-  translit(s){ const m = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'}; return s.toLowerCase().split('').map(c => m[c] !== undefined ? m[c] : c).join(''); }
-  genLogin(fio){
-    const p = fio.trim().split(/\s+/);
-    const sur = this.translit(p[0] || '').replace(/[^a-z]/g,'');
-    const ini = p.slice(1,3).map(w => this.translit((w[0] || ''))).join('').replace(/[^a-z]/g,'');
-    return sur + (ini ? '.' + ini : '');
-  }
   genCode(){ const A = 'АВЕКМНРСТХ', D = '23456789', r = (s) => s[Math.floor(Math.random() * s.length)]; return 'НВ-' + r(A) + r(D) + r(A) + r(D); }
   INITIAL(){
     return {
@@ -1119,7 +1113,7 @@ class Component extends DCLogic {
         onPick: () => { this.setState({instId:i.id, day:0, slot:null}); this.go('u5'); }}));
     const phoneReady = st.phone.length === 10;
     const loginReady = st.lgn.trim().length > 0 && st.pwd.length >= 4;
-    const codeRegReady = st.invCode.replace(/[^А-ЯA-Z0-9]/gi,'').length >= 6 && st.pwd.length >= 4;
+    const codeRegReady = st.invCode.replace(/[^А-ЯA-Z0-9]/gi,'').length >= 6 && st.lgn.trim().length >= 3 && st.pwd.length >= 4;
     const isExtra = st.bType === 'extra' && !st.resched;
     const bookLabel = st.resched ? 'Перенос занятия' : (st.bType === 'extra' ? 'Доп занятие · 2 000 ₽' : 'Занятие по пакету');
     const gDatesRaw = [{label:'Вт, 11 августа', seats:'Мест: 3 из 10'}, {label:'Чт, 27 августа', seats:'Мест: 10 из 10'}];
@@ -1201,6 +1195,7 @@ class Component extends DCLogic {
       codeRegSh: codeRegReady ? this.CTASH : 'none',
       codeRegGo: () => {
         if (st.invCode.replace(/[^А-ЯA-Z0-9]/gi,'').length < 6){ this.showToast('Введите код полностью — например, НВ-2415'); return; }
+        if (st.lgn.trim().length < 3){ this.showToast('Придумайте логин — минимум 3 символа'); return; }
         if (st.pwd.length < 4){ this.showToast('Пароль — минимум 4 символа'); return; }
         this.setState({screen:'u2', hist:[], loginStep:'phone', invCode:'', pwd:'', showPwd:false});
         this.showToast('Профиль активирован — добро пожаловать в «Навигатор»!');
@@ -1301,11 +1296,10 @@ class Component extends DCLogic {
       admSh: admReady ? this.CTASH : 'none',
       admGen: () => {
         if (!admReady){ this.showToast('Введите фамилию, имя и отчество'); return; }
-        const code = this.genCode(), login = this.genLogin(st.admName);
-        this.setState(s => ({admCode: {code, login}, issued: [{name: s.admName.trim(), role: s.admRole, br: s.admBr, grp: s.admGrp, pkg: s.admPkg, inst: s.admInst, code}, ...s.issued]}));
+        const code = this.genCode();
+        this.setState(s => ({admCode: code, issued: [{name: s.admName.trim(), role: s.admRole, br: s.admBr, grp: s.admGrp, pkg: s.admPkg, inst: s.admInst, code}, ...s.issued]}));
       },
-      admCodeVal: st.admCode ? st.admCode.code : '',
-      admCodeLogin: st.admCode ? st.admCode.login : '',
+      admCodeVal: st.admCode || '',
       admHasCode: !!st.admCode, admNoCode: !st.admCode,
       admCodeFor: st.admName.trim(),
       admCodeSub: st.admRole + ' · ' + st.admBr + (admIsStudent ? ' · ' + st.admGrp + ' · пакет ' + st.admPkg.split('· ')[1] + ' · инстр. ' + surname(st.admInst) : ''),
