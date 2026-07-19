@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#E7EBF1;font-family:'Inter',system-ui,sans-serif}
+a{color:#2563EB;text-decoration:none}
+a:hover{color:#1D4ED8}
+input{font-family:'Inter',system-ui,sans-serif}
+input::placeholder{color:#94A3B8}
+::-webkit-scrollbar{display:none}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes popIn{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px 16px">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" width="{{dw}}" height="{{dh}}" hint-size="393px,852px">
+<div style="position:relative;height:100%;display:flex;flex-direction:column;background:#F6F7F9;font-family:'Inter',system-ui,sans-serif;color:#0F1E3D">
+
+<!-- ═══ У-1 Вход ═══ -->
+<sc-if value="{{s1}}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="У-1 Вход" style="height:100%;display:flex;flex-direction:column;padding:96px 24px 30px;overflow-y:auto">
+  <div style="display:flex;justify-content:center"><img src="assets/logo.png" alt="Навигатор — сеть автошкол" style="width:214px;mix-blend-mode:multiply"></div>
+  <sc-if value="{{loginPhone}}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:48px">
+      <div style="font-size:24px;font-weight:700;letter-spacing:-.4px;text-wrap:pretty">Войдите по номеру телефона</div>
+      <div style="margin-top:8px;font-size:14px;color:#64748B;line-height:1.45">Отправим СМС с кодом подтверждения</div>
+      <div style="margin-top:24px;display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:14px;height:56px;padding:0 16px">
+        <span style="font-size:17px;font-weight:600">+7</span>
+        <input value="{{phoneVal}}" onChange="{{onPhone}}" type="tel" placeholder="(999) 123-45-67" style="flex:1;border:none;outline:none;font-size:17px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+      </div>
+      <div onClick="{{sendCode}}" style="margin-top:14px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{sendBg}};cursor:pointer" style-active="transform:scale(.98)">Получить код</div>
+    </div>
+  </sc-if>
+  <sc-if value="{{loginCode}}">
+    <div style="margin-top:48px">
+      <div style="font-size:24px;font-weight:700;letter-spacing:-.4px">Введите код из СМС</div>
+      <div style="margin-top:8px;font-size:14px;color:#64748B">Отправили на +7 {{phoneVal}} · <span onClick="{{editPhone}}" style="color:#2563EB;font-weight:600;cursor:pointer">Изменить</span></div>
+      <div style="margin-top:26px;display:flex;gap:12px;justify-content:center">
+        <sc-for list="{{codeCells}}" as="c" hint-placeholder-count="4">
+          <input value="{{c.v}}" onChange="{{c.onChange}}" onKeyDown="{{c.onKey}}" ref="{{c.ref}}" type="tel" style="width:58px;height:66px;border-radius:14px;border:1.5px solid #E2E8F0;background:#FFFFFF;text-align:center;font-size:26px;font-weight:700;color:#0F1E3D;outline:none;padding:0" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+        </sc-for>
+      </div>
+      <div onClick="{{resend}}" style="margin-top:20px;text-align:center;font-size:13.5px;color:#64748B;cursor:pointer">Отправить код ещё раз</div>
+    </div>
+  </sc-if>
+  <div style="flex:1"></div>
+  <div style="text-align:center;font-size:14px;color:#64748B;padding-bottom:14px">Ещё не учитесь у нас? <span onClick="{{toApply}}" style="color:#2563EB;font-weight:600;cursor:pointer">Оставить заявку</span></div>
+</div>
+</sc-if>
+
+<!-- ═══ У-2 Главная ═══ -->
+<sc-if value="{{s2}}">
+<div data-screen-label="У-2 Главная" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="flex:1;overflow-y:auto;padding:70px 16px 20px;display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;align-items:center;gap:12px;margin-top:4px">
+    <div style="width:46px;height:46px;flex:none"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-avatar-anna" shape="circle" placeholder="А" hint-size="46px,46px" style="width:46px;height:46px"></x-import></div>
+    <div>
+      <div style="font-size:22px;font-weight:700;letter-spacing:-.4px">Привет, Анна!</div>
+      <div style="font-size:13px;color:#64748B;margin-top:1px">Суббота, 18 июля</div>
+    </div>
+  </div>
+  <div style="background:#FFFFFF;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+    <div style="font-size:12px;font-weight:600;color:#64748B;letter-spacing:.2px">Ближайшее занятие</div>
+    <div style="margin-top:6px;font-size:24px;font-weight:700;letter-spacing:-.3px">{{nextDate}}, {{nextTime}}</div>
+    <div style="margin-top:2px;font-size:14px;color:#64748B">Вождение (город)</div>
+    <div style="margin-top:12px;display:flex;align-items:center;gap:10px">
+      <div style="width:34px;height:34px;border-radius:50%;background:#EFF4FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;flex:none">СП</div>
+      <div style="font-size:14px;font-weight:600">Сергей Петров <span style="color:#64748B;font-weight:500">· Toyota Corolla</span></div>
+    </div>
+    <div style="margin-top:8px;display:flex;align-items:center;gap:8px;font-size:13.5px;color:#64748B">
+      <span style="width:8px;height:8px;border-radius:50%;background:#2563EB;flex:none"></span>Подача: м. Ясенево
+    </div>
+    <div style="margin-top:14px;display:flex;gap:10px">
+      <div onClick="{{reschedule}}" style="flex:1;height:44px;border-radius:12px;background:#EFF4FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Перенести</div>
+      <div onClick="{{cancelInfo}}" style="flex:1;height:44px;border-radius:12px;background:#FEF2F2;color:#EF4444;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Отменить</div>
+    </div>
+  </div>
+  <sc-if value="{{bookedCard}}">
+    <div style="background:#FFFFFF;border-radius:16px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06);display:flex;align-items:center;gap:12px">
+      <div style="flex:1">
+        <div style="font-size:16px;font-weight:700">{{bookedDate}} · {{bookedTime}}</div>
+        <div style="margin-top:2px;font-size:13px;color:#64748B">Доп занятие · Сергей Петров · м. Ясенево</div>
+      </div>
+      <div style="background:#EAFBF1;color:#15803D;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;flex:none">Новое</div>
+    </div>
+  </sc-if>
+  <div style="background:#FFFFFF;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+    <div style="font-size:12px;font-weight:600;color:#64748B">Баланс часов</div>
+    <div style="margin-top:10px;display:flex;text-align:center">
+      <div style="flex:1"><div style="font-size:26px;font-weight:800;letter-spacing:-.5px">12</div><div style="font-size:12px;color:#64748B;margin-top:2px">Город</div></div>
+      <div style="width:1px;background:#EDF0F4"></div>
+      <div style="flex:1"><div style="font-size:26px;font-weight:800;letter-spacing:-.5px;color:#9CA3AF">0</div><div style="font-size:12px;color:#64748B;margin-top:2px">Площадка</div></div>
+      <div style="width:1px;background:#EDF0F4"></div>
+      <div style="flex:1"><div style="font-size:26px;font-weight:800;letter-spacing:-.5px">2</div><div style="font-size:12px;color:#64748B;margin-top:2px">Доп</div></div>
+    </div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid #EDF0F4">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div style="font-size:13px;font-weight:600;color:#64748B">Готовность к экзамену</div>
+        <div style="font-size:14px;font-weight:700;color:#2563EB">68%</div>
+      </div>
+      <div style="margin-top:8px;height:8px;border-radius:4px;background:#E9EEF4;overflow:hidden"><div style="width:68%;height:100%;border-radius:4px;background:#2563EB"></div></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+    <div onClick="{{qBook}}" style="height:86px;border-radius:16px;background:#2563EB;color:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;box-shadow:0 8px 20px rgba(37,99,235,.28)" style-active="transform:scale(.97)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/></svg>
+      <div style="font-size:12.5px;font-weight:600">Записаться</div>
+    </div>
+    <div onClick="{{qPay}}" style="height:86px;border-radius:16px;background:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)" style-active="transform:scale(.97)">
+      <div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#2563EB">₽</div>
+      <div style="font-size:12.5px;font-weight:600">Оплатить</div>
+    </div>
+    <div onClick="{{qTheory}}" style="height:86px;border-radius:16px;background:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)" style-active="transform:scale(.97)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z" stroke="#2563EB" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" stroke="#2563EB" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      <div style="font-size:12.5px;font-weight:600">Теория</div>
+    </div>
+  </div>
+</div>
+</div>
+</sc-if>
+
+<!-- ═══ У-3 Запись: что ═══ -->
+<sc-if value="{{s3}}">
+<div data-screen-label="У-3 Запись — тип занятия" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="flex:1;overflow-y:auto;padding:70px 16px 20px;display:flex;flex-direction:column;gap:12px">
+  <div style="margin:4px 0 2px">
+    <div style="font-size:22px;font-weight:700;letter-spacing:-.4px">Запись</div>
+    <div style="font-size:13px;color:#64748B;margin-top:2px">Шаг 1 из 3 · Что бронируем</div>
+  </div>
+  <div onClick="{{pickPackage}}" style="background:#FFFFFF;border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)" style-active="transform:scale(.985)">
+    <div style="width:44px;height:44px;border-radius:12px;background:#EFF4FF;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#2563EB" stroke-width="1.8"/><path d="M12 7.5V12l3 2" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+    <div style="flex:1"><div style="font-size:16px;font-weight:700">Вождение по пакету</div><div style="font-size:13px;color:#64748B;margin-top:2px">Осталось 12 ч из 28 · без доплаты</div></div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div onClick="{{pickExtra}}" style="background:#FFFFFF;border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)" style-active="transform:scale(.985)">
+    <div style="width:44px;height:44px;border-radius:12px;background:#EFF4FF;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 6v12M6 12h12" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/></svg></div>
+    <div style="flex:1"><div style="font-size:16px;font-weight:700">Доп занятие</div><div style="font-size:13px;color:#64748B;margin-top:2px">2 000 ₽ · 1,5 часа</div></div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div onClick="{{toExams}}" style="background:#FFFFFF;border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)" style-active="transform:scale(.985)">
+    <div style="width:44px;height:44px;border-radius:12px;background:#EFF4FF;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 21V4" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/><path d="M6 5h11l-2.5 3.5L17 12H6" stroke="#2563EB" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+    <div style="flex:1"><div style="font-size:16px;font-weight:700">Экзамен</div><div style="font-size:13px;color:#64748B;margin-top:2px">Внутренний и ГИБДД</div></div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div style="background:#EFFDF4;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start">
+    <div style="width:20px;height:20px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;flex:none;margin-top:1px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l5 5L20 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div style="font-size:13px;color:#15803D;line-height:1.45;font-weight:500">Площадка закрыта — доступна запись на город</div>
+  </div>
+</div>
+</div>
+</sc-if>
+
+<!-- ═══ У-4 Запись: кто ═══ -->
+<sc-if value="{{s4}}">
+<div data-screen-label="У-4 Запись — инструктор" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="display:flex;align-items:center;gap:10px;padding:66px 16px 10px">
+  <div onClick="{{back}}" style="width:36px;height:36px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 4px rgba(15,30,61,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#0F1E3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div><div style="font-size:18px;font-weight:700;letter-spacing:-.3px">Инструктор</div><div style="font-size:12.5px;color:#64748B">Шаг 2 из 3 · {{bookLabel}}</div></div>
+</div>
+<div style="display:flex;gap:8px;overflow-x:auto;padding:2px 16px 10px;flex:none">
+  <sc-for list="{{brChips}}" as="ch" hint-placeholder-count="4">
+    <div onClick="{{ch.onTap}}" style="height:36px;padding:0 14px;border-radius:10px;display:flex;align-items:center;font-size:13.5px;font-weight:600;white-space:nowrap;cursor:pointer;background:{{ch.bg}};color:{{ch.c}};border:1.5px solid {{ch.bd}};flex:none">{{ch.label}}</div>
+  </sc-for>
+  <div style="width:1px;background:#DDE3EB;flex:none;margin:4px 2px"></div>
+  <sc-for list="{{gbChips}}" as="ch" hint-placeholder-count="3">
+    <div onClick="{{ch.onTap}}" style="height:36px;padding:0 14px;border-radius:10px;display:flex;align-items:center;font-size:13.5px;font-weight:600;white-space:nowrap;cursor:pointer;background:{{ch.bg}};color:{{ch.c}};border:1.5px solid {{ch.bd}};flex:none">{{ch.label}}</div>
+  </sc-for>
+</div>
+<div style="flex:1;overflow-y:auto;padding:2px 16px 20px;display:flex;flex-direction:column;gap:10px">
+  <div onClick="{{pickMine}}" style="background:#FFFFFF;border:1.5px solid #2563EB;border-radius:16px;padding:14px;cursor:pointer;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)" style-active="transform:scale(.985)">
+    <div style="display:inline-flex;background:#EFF4FF;color:#2563EB;font-size:11px;font-weight:700;padding:3px 8px;border-radius:7px;letter-spacing:.2px">Мой инструктор</div>
+    <div style="margin-top:10px;display:flex;gap:12px;align-items:center">
+      <div style="width:62px;height:62px;flex:none"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-inst-sergey" shape="circle" placeholder="Фото: Сергей" hint-size="62px,62px" style="width:62px;height:62px"></x-import></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:16.5px;font-weight:700">Сергей Петров</div>
+        <div style="font-size:13px;color:#64748B;margin-top:2px">Toyota Corolla · АКПП · м. Ясенево</div>
+        <div style="font-size:13px;margin-top:4px"><span style="color:#F59E0B;font-weight:700">★ 4,9</span> <span style="color:#2563EB;font-weight:600;margin-left:6px">Ближайший слот: завтра 17:00</span></div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M9 6l6 6-6 6" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <div style="font-size:13px;font-weight:600;color:#64748B;margin-top:6px">Другие инструкторы</div>
+  <sc-for list="{{others}}" as="p" hint-placeholder-count="3">
+    <div onClick="{{p.onPick}}" style="background:#FFFFFF;border-radius:16px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)" style-active="transform:scale(.985)">
+      <div style="width:62px;height:62px;flex:none"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-inst-{{p.id}}" shape="circle" placeholder="{{p.ph}}" hint-size="62px,62px" style="width:62px;height:62px"></x-import></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:16.5px;font-weight:700">{{p.name}}</div>
+        <div style="font-size:13px;color:#64748B;margin-top:2px">{{p.meta}}</div>
+        <div style="font-size:13px;margin-top:4px"><span style="color:#F59E0B;font-weight:700">★ {{p.rate}}</span> <span style="color:#2563EB;font-weight:600;margin-left:6px">Ближайший слот: {{p.next}}</span></div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M9 6l6 6-6 6" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </sc-for>
+  <sc-if value="{{noOthers}}"><div style="text-align:center;font-size:13.5px;color:#64748B;padding:18px 0">По этим фильтрам инструкторов нет</div></sc-if>
+</div>
+</div>
+</sc-if>
+
+<!-- ═══ У-5 Запись: когда ═══ -->
+<sc-if value="{{s5}}">
+<div data-screen-label="У-5 Запись — дата и время" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="display:flex;align-items:center;gap:10px;padding:66px 16px 12px">
+  <div onClick="{{back}}" style="width:36px;height:36px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 4px rgba(15,30,61,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#0F1E3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div><div style="font-size:18px;font-weight:700;letter-spacing:-.3px">Дата и время</div><div style="font-size:12.5px;color:#64748B">Шаг 3 из 3 · {{instName}} · {{instCar}}</div></div>
+</div>
+<div style="display:flex;gap:6px;padding:0 16px 4px;flex:none">
+  <sc-for list="{{week}}" as="d" hint-placeholder-count="7">
+    <div onClick="{{d.onTap}}" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:9px 0 7px;border-radius:13px;cursor:pointer;background:{{d.bg}};border:1px solid {{d.bd}}" style-active="transform:scale(.96)">
+      <div style="font-size:11px;font-weight:600;color:{{d.c1}}">{{d.wd}}</div>
+      <div style="font-size:17px;font-weight:700;margin-top:1px;color:{{d.c2}}">{{d.n}}</div>
+      <div style="width:5px;height:5px;border-radius:50%;margin-top:4px;background:{{d.dotBg}};visibility:{{d.dotV}}"></div>
+    </div>
+  </sc-for>
+</div>
+<div style="flex:1;overflow-y:auto;padding:12px 16px 8px">
+  <div style="display:flex;justify-content:space-between;align-items:baseline">
+    <div style="font-size:13px;font-weight:600;color:#64748B">Свободное время</div>
+    <div style="font-size:12px;color:#9CA3AF">серые — заняты</div>
+  </div>
+  <sc-if value="{{hasSlots}}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <sc-for list="{{slots}}" as="sl" hint-placeholder-count="6">
+        <div onClick="{{sl.onTap}}" style="height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;letter-spacing:.2px;background:{{sl.bg}};color:{{sl.c}};border:1.5px solid {{sl.bd}};cursor:{{sl.cur}}">{{sl.label}}</div>
+      </sc-for>
+    </div>
+  </sc-if>
+  <sc-if value="{{noSlots}}">
+    <div style="margin-top:12px;background:#FFFFFF;border-radius:16px;padding:22px 18px;text-align:center;font-size:14px;color:#64748B;line-height:1.5;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">На {{dayFull}} свободных слотов нет.<br>Выберите другой день.</div>
+  </sc-if>
+</div>
+<div style="padding:10px 16px 14px;flex:none">
+  <div onClick="{{contGo}}" style="height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{contBg}};cursor:pointer" style-active="transform:scale(.98)">Продолжить</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ═══ У-6 Подтверждение ═══ -->
+<sc-if value="{{s6}}">
+<div data-screen-label="У-6 Подтверждение" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="display:flex;align-items:center;gap:10px;padding:66px 16px 10px">
+  <div onClick="{{back}}" style="width:36px;height:36px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 4px rgba(15,30,61,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#0F1E3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div><div style="font-size:18px;font-weight:700;letter-spacing:-.3px">Подтверждение</div><div style="font-size:12.5px;color:#64748B">{{bookLabel}}</div></div>
+</div>
+<div style="flex:1;overflow-y:auto;padding:4px 16px 8px;display:flex;flex-direction:column;gap:12px">
+  <div style="background:#FFFFFF;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+    <div style="font-size:26px;font-weight:700;letter-spacing:-.4px">{{confTime}}</div>
+    <div style="font-size:14px;color:#64748B;margin-top:2px">{{confDate}}</div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid #EDF0F4;display:flex;flex-direction:column;gap:9px">
+      <div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#64748B">Инструктор</span><span style="font-weight:600">{{instName}}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#64748B">Автомобиль</span><span style="font-weight:600">{{instCar}} · {{instGb}}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#64748B">Подача</span><span style="font-weight:600">м. {{instBr}}</span></div>
+    </div>
+    <div style="margin-top:12px;position:relative;height:140px;border-radius:12px;overflow:hidden;background:#E9EFE2">
+      <div style="position:absolute;top:14px;left:-16px;width:120px;height:52px;border-radius:10px;background:#DCE5D2"></div>
+      <div style="position:absolute;top:8px;right:18px;width:86px;height:44px;border-radius:10px;background:#E2E9D8"></div>
+      <div style="position:absolute;bottom:10px;left:26px;width:96px;height:40px;border-radius:10px;background:#DCE5D2"></div>
+      <div style="position:absolute;bottom:-24px;right:-20px;width:110px;height:80px;border-radius:50%;background:#D7E4EE"></div>
+      <div style="position:absolute;top:64px;left:-12px;right:-12px;height:13px;border-radius:7px;background:#FFFFFF;transform:rotate(-5deg)"></div>
+      <div style="position:absolute;top:-12px;bottom:-12px;left:98px;width:10px;border-radius:5px;background:#FFFFFF;transform:rotate(7deg)"></div>
+      <div style="position:absolute;top:6px;right:64px;width:8px;height:74px;border-radius:4px;background:#FFFFFF;transform:rotate(-32deg)"></div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div style="width:26px;height:26px;border-radius:50%;background:#2563EB;border:3.5px solid #FFFFFF;box-shadow:0 4px 10px rgba(15,30,61,.3)"></div>
+        <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #FFFFFF;margin-top:-2px"></div>
+        <div style="margin-top:4px;background:#0F1E3D;color:#FFFFFF;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:8px">м. {{instBr}}</div>
+      </div>
+    </div>
+  </div>
+  <sc-if value="{{isExtra}}">
+    <div style="background:#FFFFFF;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:baseline;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+      <span style="font-size:14px;color:#64748B">Доп занятие · 1,5 ч</span><span style="font-size:20px;font-weight:800;letter-spacing:-.3px">2 000 ₽</span>
+    </div>
+  </sc-if>
+  <div style="background:#F1F4F8;border-radius:12px;padding:12px 14px;font-size:12.5px;color:#64748B;line-height:1.5">Отмена бесплатно за 24 ч до занятия. Позже — час сгорает.</div>
+</div>
+<div style="padding:10px 16px 14px;flex:none">
+  <div onClick="{{doConfirm}}" style="height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:#2563EB;cursor:pointer;box-shadow:0 8px 20px rgba(37,99,235,.28)" style-active="transform:scale(.98)">{{confCta}}</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ═══ У-7 Оплата / Успех ═══ -->
+<sc-if value="{{s7pay}}">
+<div data-screen-label="У-7 Оплата" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="display:flex;align-items:center;gap:10px;padding:66px 16px 10px">
+  <div onClick="{{back}}" style="width:36px;height:36px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 4px rgba(15,30,61,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#0F1E3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div style="font-size:18px;font-weight:700;letter-spacing:-.3px">Оплата</div>
+</div>
+<div style="flex:1;overflow-y:auto;padding:4px 16px 20px;display:flex;flex-direction:column;gap:12px">
+  <div style="background:#FFFFFF;border-radius:16px;padding:16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+    <div><div style="font-size:15px;font-weight:700">Доп занятие</div><div style="font-size:13px;color:#64748B;margin-top:2px">{{confShort}} · {{confTime}}</div></div>
+    <div style="font-size:22px;font-weight:800;letter-spacing:-.3px">2 000 ₽</div>
+  </div>
+  <div onClick="{{paySbp}}" style="height:56px;border-radius:14px;background:#2563EB;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;box-shadow:0 8px 20px rgba(37,99,235,.28)" style-active="transform:scale(.98)">
+    <sc-if value="{{payingNo}}" hint-placeholder-val="{{ true }}">
+      <span style="background:rgba(255,255,255,.2);color:#FFFFFF;font-size:11px;font-weight:800;padding:3px 7px;border-radius:6px;letter-spacing:.5px">СБП</span>
+      <span style="color:#FFFFFF;font-size:15.5px;font-weight:600">Оплатить через приложение банка</span>
+    </sc-if>
+    <sc-if value="{{paying}}">
+      <span style="width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#FFFFFF;animation:spin .7s linear infinite"></span>
+      <span style="color:#FFFFFF;font-size:15.5px;font-weight:600">Ждём подтверждение банка…</span>
+    </sc-if>
+  </div>
+  <div onClick="{{payCard}}" style="background:#FFFFFF;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)" style-active="transform:scale(.985)">
+    <div style="width:36px;height:36px;border-radius:10px;background:#EFF4FF;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="#2563EB" stroke-width="1.8"/><path d="M3 10h18" stroke="#2563EB" stroke-width="1.8"/></svg></div>
+    <div style="flex:1;font-size:15px;font-weight:600">Банковская карта</div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div style="text-align:center;font-size:12px;color:#9CA3AF">Чек придёт по СМС после оплаты</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{s7ok}}">
+<div data-screen-label="У-7 Успех" style="height:100%;display:flex;flex-direction:column;min-height:0;padding:66px 24px 14px">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div style="width:92px;height:92px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;animation:popIn .45s ease;box-shadow:0 16px 36px rgba(34,197,94,.35)"><svg width="42" height="42" viewBox="0 0 24 24" fill="none"><path d="M5 13l5 5L20 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div style="margin-top:22px;font-size:25px;font-weight:800;letter-spacing:-.4px">{{okTitle}}</div>
+    <div style="margin-top:6px;font-size:14px;color:#64748B;text-align:center">{{confShort}}, {{confTime}} · {{instName}}</div>
+    <div style="margin-top:22px;background:#FFFFFF;border-radius:16px;padding:16px;width:100%;display:flex;flex-direction:column;gap:11px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+      <div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#475569"><span style="color:#22C55E;font-weight:800">✓</span>Занятие добавлено в календарь</div>
+      <div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#475569"><span style="color:#22C55E;font-weight:800">✓</span>Чек отправлен по СМС</div>
+      <div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#475569"><span style="color:#22C55E;font-weight:800">✓</span>Напомним за сутки и за 2 часа</div>
+    </div>
+  </div>
+  <div onClick="{{toHome}}" style="height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:#2563EB;cursor:pointer;flex:none" style-active="transform:scale(.98)">На главную</div>
+</div>
+</sc-if>
+
+<!-- ═══ У-8 Экзамены ═══ -->
+<sc-if value="{{s8}}">
+<div data-screen-label="У-8 Экзамены" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="display:flex;align-items:center;gap:10px;padding:66px 16px 10px">
+  <div onClick="{{back}}" style="width:36px;height:36px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 4px rgba(15,30,61,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#0F1E3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div style="font-size:18px;font-weight:700;letter-spacing:-.3px">Экзамены</div>
+</div>
+<div style="flex:1;overflow-y:auto;padding:4px 16px 20px;display:flex;flex-direction:column;gap:12px">
+  <div style="background:#FFFFFF;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+    <div style="font-size:16.5px;font-weight:700">Внутренний экзамен</div>
+    <div style="font-size:13px;color:#64748B;margin-top:2px">Допуск откроется после выполнения условий</div>
+    <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+      <div style="width:22px;height:22px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;flex:none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 13l5 5L20 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div style="font-size:14px;font-weight:500">Теория в ПРОФТЕХ — сдана</div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+      <div style="width:22px;height:22px;border-radius:50%;border:2px solid #F59E0B;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:none">2</div>
+      <div style="font-size:14px;font-weight:500">Откатано 26 из 28 ч — осталось 2</div>
+    </div>
+    <div style="margin-top:10px;height:6px;border-radius:3px;background:#E9EEF4;overflow:hidden"><div style="width:93%;height:100%;background:#F59E0B;border-radius:3px"></div></div>
+    <div style="margin-top:14px;height:48px;border-radius:12px;background:#E9EEF4;color:#94A3B8;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;cursor:default">Записаться</div>
+    <div style="margin-top:8px;text-align:center;font-size:12px;color:#9CA3AF">Откроется после 28 откатанных часов</div>
+  </div>
+  <div style="background:#FFFFFF;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+    <div style="font-size:16.5px;font-weight:700">Экзамен в ГИБДД</div>
+    <div style="font-size:13px;color:#64748B;margin-top:2px">Ближайшие даты в вашем отделении</div>
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{gDates}}" as="g" hint-placeholder-count="2">
+        <div onClick="{{g.onTap}}" style="border:1.5px solid {{g.bd}};background:{{g.bg}};border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer">
+          <div style="flex:1"><div style="font-size:15px;font-weight:600">{{g.label}}</div><div style="font-size:12.5px;color:#64748B;margin-top:1px">{{g.seats}}</div></div>
+          <div style="width:20px;height:20px;border-radius:50%;border:{{g.radio}};flex:none"></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;align-items:center;font-size:13px;color:#64748B"><span style="color:#22C55E;font-weight:800">✓</span>Автомобиль школы предоставляется</div>
+    <sc-if value="{{gibddNo}}" hint-placeholder-val="{{ true }}">
+      <div onClick="{{applyGibdd}}" style="margin-top:14px;height:48px;border-radius:12px;background:#2563EB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Записаться</div>
+    </sc-if>
+    <sc-if value="{{gibddYes}}">
+      <div style="margin-top:14px;background:#EAFBF1;border-radius:12px;padding:12px 14px;font-size:13.5px;font-weight:600;color:#15803D;text-align:center">Заявка отправлена — администратор подтвердит место</div>
+    </sc-if>
+  </div>
+</div>
+</div>
+</sc-if>
+
+<!-- ═══ У-9 Заявка ═══ -->
+<sc-if value="{{s9}}">
+<div data-screen-label="У-9 Заявка нового ученика" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="display:flex;align-items:center;gap:10px;padding:66px 16px 10px;flex:none">
+  <div onClick="{{appBack}}" style="width:36px;height:36px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 4px rgba(15,30,61,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#0F1E3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div style="font-size:18px;font-weight:700;letter-spacing:-.3px">Заявка на обучение</div>
+</div>
+<sc-if value="{{appFormShow}}" hint-placeholder-val="{{ true }}">
+<div style="flex:1;overflow-y:auto;padding:4px 16px 8px;display:flex;flex-direction:column;gap:14px">
+  <div>
+    <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Имя</div>
+    <input value="{{aName}}" onChange="{{onAName}}" placeholder="Как к вам обращаться" style="width:100%;height:52px;border-radius:14px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:16px;font-weight:500;color:#0F1E3D;outline:none" style-focus="border-color:#2563EB">
+  </div>
+  <div>
+    <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Телефон</div>
+    <div style="display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:14px;height:52px;padding:0 16px">
+      <span style="font-size:16px;font-weight:600">+7</span>
+      <input value="{{aPhoneVal}}" onChange="{{onAPhone}}" type="tel" placeholder="(999) 123-45-67" style="flex:1;border:none;outline:none;font-size:16px;font-weight:500;background:transparent;color:#0F1E3D;min-width:0">
+    </div>
+  </div>
+  <div>
+    <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Филиал</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{aBrChips}}" as="ch" hint-placeholder-count="3">
+        <div onClick="{{ch.onTap}}" style="height:38px;padding:0 14px;border-radius:10px;display:flex;align-items:center;font-size:13.5px;font-weight:600;cursor:pointer;background:{{ch.bg}};color:{{ch.c}};border:1.5px solid {{ch.bd}}">{{ch.label}}</div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:flex;gap:14px">
+    <div style="flex:none">
+      <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Категория</div>
+      <div style="height:38px;padding:0 16px;border-radius:10px;display:inline-flex;align-items:center;font-size:13.5px;font-weight:700;background:#2563EB;color:#FFFFFF">B</div>
+    </div>
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">КПП</div>
+      <div style="display:flex;gap:8px">
+        <sc-for list="{{aGbChips}}" as="ch" hint-placeholder-count="2">
+          <div onClick="{{ch.onTap}}" style="height:38px;padding:0 14px;border-radius:10px;display:flex;align-items:center;font-size:13.5px;font-weight:600;cursor:pointer;background:{{ch.bg}};color:{{ch.c}};border:1.5px solid {{ch.bd}}">{{ch.label}}</div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Удобное время</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{aTimeChips}}" as="ch" hint-placeholder-count="4">
+        <div onClick="{{ch.onTap}}" style="height:38px;padding:0 14px;border-radius:10px;display:flex;align-items:center;font-size:13.5px;font-weight:600;cursor:pointer;background:{{ch.bg}};color:{{ch.c}};border:1.5px solid {{ch.bd}}">{{ch.label}}</div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+<div style="padding:10px 16px 24px;flex:none">
+  <div onClick="{{sendApp}}" style="height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{appBg}};cursor:pointer" style-active="transform:scale(.98)">Отправить</div>
+</div>
+</sc-if>
+<sc-if value="{{appSent}}">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px">
+  <div style="width:84px;height:84px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;animation:popIn .45s ease;box-shadow:0 16px 36px rgba(34,197,94,.35)"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M5 13l5 5L20 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div style="margin-top:20px;font-size:23px;font-weight:800;letter-spacing:-.4px">Спасибо!</div>
+  <div style="margin-top:8px;font-size:14px;color:#64748B;text-align:center;line-height:1.5">Администратор свяжется с вами<br>в течение часа</div>
+  <div onClick="{{appBack}}" style="margin-top:26px;height:48px;padding:0 28px;border-radius:12px;background:#EFF4FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;cursor:pointer">Ко входу</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<!-- ═══ У-10 Теория ═══ -->
+<sc-if value="{{s10}}">
+<div data-screen-label="У-10 Теория" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="flex:1;overflow-y:auto;padding:70px 16px 20px;display:flex;flex-direction:column;gap:12px">
+  <div style="margin:4px 0 2px;font-size:22px;font-weight:700;letter-spacing:-.4px">Теория</div>
+  <div style="background:#FFFFFF;border-radius:16px;padding:14px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+    <div style="width:100%;height:112px"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-theory" shape="rounded" radius="12" placeholder="Иллюстрация курса теории" hint-size="100%,112px" style="width:100%;height:112px"></x-import></div>
+    <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
+      <div style="background:#EFF4FF;color:#2563EB;font-size:11px;font-weight:800;padding:3px 8px;border-radius:7px;letter-spacing:.4px">ПРОФТЕХ</div>
+      <div style="font-size:16.5px;font-weight:700">Курс теории ПДД</div>
+    </div>
+    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:baseline">
+      <span style="font-size:13.5px;color:#64748B">Тем пройдено</span><span style="font-size:14px;font-weight:700">14 из 24</span>
+    </div>
+    <div style="margin-top:8px;height:8px;border-radius:4px;background:#E9EEF4;overflow:hidden"><div style="width:58%;height:100%;background:#2563EB;border-radius:4px"></div></div>
+    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:baseline">
+      <span style="font-size:13.5px;color:#64748B">Средний балл</span><span style="font-size:14px;font-weight:700;color:#15803D">82%</span>
+    </div>
+    <div onClick="{{qTheoryOut}}" style="margin-top:14px;height:50px;border-radius:12px;background:#2563EB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">
+      Продолжить в ПРОФТЕХ
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M9 7h8v8" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <div style="background:#FFF7E6;border-radius:12px;padding:12px 14px;font-size:13px;color:#92400E;line-height:1.5;font-weight:500">Внутренний экзамен откроется после сдачи всех зачётов</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ═══ У-11 Мои занятия ═══ -->
+<sc-if value="{{s11}}">
+<div data-screen-label="У-11 Мои занятия" style="height:100%;display:flex;flex-direction:column;min-height:0">
+<div style="flex:1;overflow-y:auto;padding:70px 16px 20px;display:flex;flex-direction:column;gap:12px">
+  <div style="margin:4px 0 2px;font-size:22px;font-weight:700;letter-spacing:-.4px">Занятия</div>
+  <div style="background:#E9EEF4;border-radius:12px;padding:3px;display:flex">
+    <div onClick="{{segFuture}}" style="flex:1;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer;background:{{segFBg}};color:{{segFC}};box-shadow:{{segFSh}}">Будущие</div>
+    <div onClick="{{segPast}}" style="flex:1;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer;background:{{segPBg}};color:{{segPC}};box-shadow:{{segPSh}}">Прошлые</div>
+  </div>
+  <sc-if value="{{segIsFuture}}" hint-placeholder-val="{{ true }}">
+    <sc-for list="{{futureL}}" as="l" hint-placeholder-count="2">
+      <div style="background:#FFFFFF;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div style="font-size:22px;font-weight:700;letter-spacing:-.3px">{{l.time}}</div>
+          <sc-if value="{{l.isNew}}"><div style="background:#EAFBF1;color:#15803D;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px">Новое</div></sc-if>
+        </div>
+        <div style="font-size:14px;color:#64748B;margin-top:2px">{{l.when}}</div>
+        <div style="margin-top:10px;font-size:13.5px;color:#475569;font-weight:500">{{l.what}} · {{l.who}}</div>
+        <div style="margin-top:5px;display:flex;align-items:center;gap:7px;font-size:13px;color:#64748B"><span style="width:7px;height:7px;border-radius:50%;background:#2563EB;flex:none"></span>Подача: {{l.where}}</div>
+      </div>
+    </sc-for>
+  </sc-if>
+  <sc-if value="{{segIsPast}}">
+    <sc-for list="{{pastL}}" as="l" hint-placeholder-count="3">
+      <div style="background:#FFFFFF;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(15,30,61,.04),0 8px 24px rgba(15,30,61,.06)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <div style="font-size:14.5px;font-weight:700;flex:1;min-width:0;white-space:nowrap">{{l.d}} · {{l.t}}</div>
+          <div style="font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;background:{{l.sBg}};color:{{l.sC}};flex:none">{{l.status}}</div>
+        </div>
+        <div style="margin-top:4px;font-size:13.5px;color:#64748B">{{l.sub}}</div>
+        <sc-if value="{{l.hasSkills}}">
+          <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{l.skills}}" as="sk" hint-placeholder-count="2">
+              <div style="background:#F1F4F8;color:#475569;font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px">{{sk}}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{l.note}}"><div style="margin-top:8px;font-size:12.5px;color:#9CA3AF">{{l.note}}</div></sc-if>
+      </div>
+    </sc-for>
+  </sc-if>
+</div>
+</div>
+</sc-if>
+
+<!-- ═══ Таб-бар ═══ -->
+<sc-if value="{{showTab}}">
+<div style="position:relative;z-index:30;display:flex;align-items:flex-start;padding:8px 6px 24px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid #EDF0F4;flex:none">
+  <div onClick="{{tabHome}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:{{tHomeC}}">
+    <svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M3.5 10.5 12 3.5l8.5 7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div style="font-size:10px;font-weight:600">Главная</div>
+  </div>
+  <div onClick="{{tabBook}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:{{tBookC}}">
+    <svg width="23" height="23" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="3" stroke="currentColor" stroke-width="1.9"/><path d="M3.5 9.5h17M8 3v3.5M16 3v3.5M12 12.5v4M10 14.5h4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+    <div style="font-size:10px;font-weight:600">Запись</div>
+  </div>
+  <div onClick="{{tabLessons}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:{{tLessC}}">
+    <svg width="23" height="23" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.9"/><path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+    <div style="font-size:10px;font-weight:600">Занятия</div>
+  </div>
+  <div onClick="{{tabTheory}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:{{tTheoC}}">
+    <svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
+    <div style="font-size:10px;font-weight:600">Теория</div>
+  </div>
+  <div onClick="{{tabProfile}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:#94A3B8">
+    <svg width="23" height="23" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="1.9"/><path d="M5 20c1.4-3.4 3.9-5 7-5s5.6 1.6 7 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+    <div style="font-size:10px;font-weight:600">Профиль</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{toastMsg}}">
+<div style="position:absolute;bottom:112px;left:50%;transform:translateX(-50%);z-index:70;background:#0F1E3D;color:#FFFFFF;padding:12px 18px;border-radius:14px;font-size:13.5px;font-weight:500;width:max-content;max-width:330px;text-align:center;box-shadow:0 10px 30px rgba(15,30,61,.35);animation:toastIn .25s ease">{{toastMsg}}</div>
+</sc-if>
+<sc-if value="{{codeBadge}}">
+<div style="position:absolute;top:64px;right:14px;z-index:65;background:rgba(15,30,61,.55);color:#FFFFFF;font-size:11px;font-weight:700;letter-spacing:.4px;padding:4px 8px;border-radius:8px;pointer-events:none;font-family:ui-monospace,Menlo,monospace">{{codeBadge}}</div>
+</sc-if>
+</div>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;У-1&quot;,&quot;У-2&quot;,&quot;У-3&quot;,&quot;У-4&quot;,&quot;У-5&quot;,&quot;У-6&quot;,&quot;У-7&quot;,&quot;У-8&quot;,&quot;У-9&quot;,&quot;У-10&quot;,&quot;У-11&quot;],&quot;default&quot;:&quot;У-1&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Демо&quot;},&quot;showCodes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Демо&quot;}}">
+class Component extends DCLogic {
+  W = [
+    {wd:'Вс',n:19,full:'воскресенье, 19 июля',short:'Вс, 19 июля'},
+    {wd:'Пн',n:20,full:'понедельник, 20 июля',short:'Пн, 20 июля'},
+    {wd:'Вт',n:21,full:'вторник, 21 июля',short:'Вт, 21 июля'},
+    {wd:'Ср',n:22,full:'среду, 22 июля',short:'Ср, 22 июля'},
+    {wd:'Чт',n:23,full:'четверг, 23 июля',short:'Чт, 23 июля'},
+    {wd:'Пт',n:24,full:'пятницу, 24 июля',short:'Пт, 24 июля'},
+    {wd:'Сб',n:25,full:'субботу, 25 июля',short:'Сб, 25 июля'}
+  ];
+  TIMES = ['08:00–09:30','10:00–11:30','11:30–13:00','13:30–15:00','15:30–17:00','17:00–18:30','18:30–20:00'];
+  INST = [
+    {id:'sergey',name:'Сергей Петров',car:'Toyota Corolla',gb:'АКПП',br:'Ясенево',rate:'4,9',next:'завтра 17:00',mine:true},
+    {id:'dmitry',name:'Дмитрий Соколов',car:'Hyundai Solaris',gb:'МКПП',br:'Бутово',rate:'4,8',next:'завтра 10:00'},
+    {id:'oleg',name:'Олег Виноградов',car:'Kia Rio',gb:'АКПП',br:'Молодёжная',rate:'4,7',next:'пн 12:00'},
+    {id:'marina',name:'Марина Кузнецова',car:'Toyota Corolla',gb:'МКПП',br:'Ясенево',rate:'5,0',next:'вс 08:00'}
+  ];
+  SC = {'У-1':'u1','У-2':'u2','У-3':'u3','У-4':'u4','У-5':'u5','У-6':'u6','У-7':'u7','У-8':'u8','У-9':'u9','У-10':'u10','У-11':'u11'};
+  CODES = {u1:'У-1',u2:'У-2',u3:'У-3',u4:'У-4',u5:'У-5',u6:'У-6',u7:'У-7',u8:'У-8',u9:'У-9',u10:'У-10',u11:'У-11'};
+  codeRefs = [React.createRef(),React.createRef(),React.createRef(),React.createRef()];
+  state = {
+    screen:'u1', loginStep:'phone', phone:'', code:['','','',''],
+    bType:'extra', resched:false, instId:'sergey', day:0, slot:null,
+    fBr:'Все', fGb:'Все',
+    pay:'methods', paying:false, booked:null,
+    nextLesson:{date:'Завтра',time:'17:00–18:30'},
+    gDate:0, gibddSent:false, seg:'future',
+    appSent:false, aName:'', aPhone:'',
+    aBr:'Ясенево', aGb:'АКПП', aTime:['вечер'],
+    toast:null, hist:[]
+  };
+  componentDidMount(){
+    const t = this.SC[this.props.startScreen];
+    if (t && t !== 'u1') this.jump(t);
+  }
+  componentDidUpdate(pp, ps){
+    if (pp.startScreen !== this.props.startScreen){
+      const t = this.SC[this.props.startScreen];
+      if (t) this.jump(t);
+    }
+    if (ps.loginStep !== 'code' && this.state.loginStep === 'code'){
+      const r = this.codeRefs[0].current; if (r) r.focus();
+    }
+  }
+  jump(sc){
+    this.setState(st => ({screen:sc, hist:[], pay:'methods', paying:false,
+      loginStep:'phone', slot: st.slot == null ? 1 : st.slot}));
+  }
+  go = (s) => this.setState(st => ({screen:s, hist:[...st.hist, st.screen]}));
+  back = () => this.setState(st => {
+    const h = [...st.hist]; const p = h.pop() || 'u2';
+    return {screen:p, hist:h};
+  });
+  nav = (s) => this.setState({screen:s, hist:[]});
+  showToast(m){
+    clearTimeout(this._tt);
+    this.setState({toast:m});
+    this._tt = setTimeout(() => this.setState({toast:null}), 2600);
+  }
+  slotsFor(d){
+    return this.TIMES.map((t,i) => ({t, busy: ((i*2 + d*3) % 5 === 0) || (d === 0 && i === 5) || d === 6}));
+  }
+  slotLabel(){
+    const s = this.slotsFor(this.state.day);
+    return this.state.slot != null ? s[this.state.slot].t : '10:00–11:30';
+  }
+  fmtPhone(d){
+    if (!d) return '';
+    let r = '(' + d.slice(0,3);
+    if (d.length >= 3) r += ') ';
+    r += d.slice(3,6);
+    if (d.length > 6) r += '-' + d.slice(6,8);
+    if (d.length > 8) r += '-' + d.slice(8,10);
+    return r;
+  }
+  completeBooking(){
+    const w = this.W[this.state.day], sl = this.slotLabel();
+    if (this.state.resched)
+      this.setState({nextLesson:{date:w.short, time:sl}, pay:'success', paying:false});
+    else
+      this.setState({booked:{date:w.short, time:sl}, pay:'success', paying:false});
+  }
+  chip(a){
+    return a ? {bg:'#2563EB', c:'#FFFFFF', bd:'#2563EB'} : {bg:'#FFFFFF', c:'#475569', bd:'#E2E8F0'};
+  }
+  renderVals(){
+    const st = this.state, scr = st.screen;
+    const inst = this.INST.find(i => i.id === st.instId) || this.INST[0];
+    const rawSlots = this.slotsFor(st.day);
+    const slots = rawSlots.map((s,i) => ({
+      label: s.t,
+      bg: st.slot === i ? '#2563EB' : (s.busy ? '#EDF1F5' : '#FFFFFF'),
+      c: st.slot === i ? '#FFFFFF' : (s.busy ? '#9CA3AF' : '#0F1E3D'),
+      bd: st.slot === i ? '#2563EB' : (s.busy ? 'transparent' : '#E2E8F0'),
+      cur: s.busy ? 'default' : 'pointer',
+      onTap: s.busy ? null : (() => this.setState({slot:i}))
+    }));
+    const hasSlots = rawSlots.some(s => !s.busy);
+    const week = this.W.map((w,i) => {
+      const act = st.day === i;
+      const free = this.slotsFor(i).some(s => !s.busy);
+      return {...w, bg: act ? '#2563EB' : '#FFFFFF', bd: act ? '#2563EB' : '#EDF0F4',
+        c1: act ? 'rgba(255,255,255,.75)' : '#64748B', c2: act ? '#FFFFFF' : '#0F1E3D',
+        dotBg: act ? '#FFFFFF' : '#22C55E', dotV: free ? 'visible' : 'hidden',
+        onTap: () => this.setState({day:i, slot:null})};
+    });
+    const brChips = ['Все','Ясенево','Бутово','Молодёжная'].map(b => ({label:b, ...this.chip(st.fBr === b), onTap:() => this.setState({fBr:b})}));
+    const gbChips = ['Все','АКПП','МКПП'].map(b => ({label:b, ...this.chip(st.fGb === b), onTap:() => this.setState({fGb:b})}));
+    const others = this.INST.filter(i => !i.mine)
+      .filter(i => st.fBr === 'Все' || i.br === st.fBr)
+      .filter(i => st.fGb === 'Все' || i.gb === st.fGb)
+      .map(i => ({...i, meta: i.car + ' · ' + i.gb + ' · м. ' + i.br, ph: 'Фото: ' + i.name.split(' ')[0],
+        onPick: () => { this.setState({instId:i.id, day:0, slot:null}); this.go('u5'); }}));
+    const codeCells = st.code.map((v,i) => ({
+      v, ref: this.codeRefs[i],
+      onChange: (e) => {
+        const d = e.target.value.replace(/\D/g,'').slice(-1);
+        const code = [...this.state.code]; code[i] = d;
+        this.setState({code});
+        if (d && i < 3){ const r = this.codeRefs[i+1].current; if (r) r.focus(); }
+        if (code.every(x => x)) setTimeout(() => this.setState({screen:'u2', hist:[]}), 350);
+      },
+      onKey: (e) => {
+        if (e.key === 'Backspace' && !this.state.code[i] && i > 0){
+          const r = this.codeRefs[i-1].current; if (r) r.focus();
+        }
+      }
+    }));
+    const phoneReady = st.phone.length === 10;
+    const isExtra = st.bType === 'extra' && !st.resched;
+    const bookLabel = st.resched ? 'Перенос занятия' : (st.bType === 'extra' ? 'Доп занятие · 2 000 ₽' : 'Занятие по пакету');
+    const gDatesRaw = [{label:'Вт, 11 августа', seats:'Мест: 3 из 10'}, {label:'Чт, 27 августа', seats:'Мест: 10 из 10'}];
+    const gDates = gDatesRaw.map((g,i) => ({...g,
+      bd: st.gDate === i ? '#2563EB' : '#E2E8F0', bg: st.gDate === i ? '#F5F8FF' : '#FFFFFF',
+      radio: st.gDate === i ? '6px solid #2563EB' : '2px solid #CBD5E1',
+      onTap: () => this.setState({gDate:i})}));
+    const aReady = st.aName.trim().length > 1 && st.aPhone.length === 10;
+    const aBrChips = ['Ясенево','Бутово','Молодёжная'].map(b => ({label:b, ...this.chip(st.aBr === b), onTap:() => this.setState({aBr:b})}));
+    const aGbChips = ['АКПП','МКПП'].map(b => ({label:b, ...this.chip(st.aGb === b), onTap:() => this.setState({aGb:b})}));
+    const aTimeChips = ['утро','день','вечер','выходные'].map(b => ({label:b, ...this.chip(st.aTime.includes(b)),
+      onTap: () => this.setState(s => ({aTime: s.aTime.includes(b) ? s.aTime.filter(x => x !== b) : [...s.aTime, b]}))}));
+    const futureL = [
+      {when: st.nextLesson.date === 'Завтра' ? 'Завтра, воскресенье' : st.nextLesson.date, time: st.nextLesson.time, what:'Вождение (город)', who:'Сергей Петров', where:'м. Ясенево', isNew:false},
+      st.booked ? {when: st.booked.date, time: st.booked.time, what:'Доп занятие (город)', who: inst.name, where:'м. ' + inst.br, isNew:true} : null,
+      {when:'Ср, 22 июля', time:'10:00–11:30', what:'Вождение (город)', who:'Сергей Петров', where:'м. Ясенево', isNew:false}
+    ].filter(Boolean);
+    const pastL = [
+      {d:'Ср, 16 июля', t:'17:00–18:30', status:'Проведено', sBg:'#EAFBF1', sC:'#15803D', sub:'Вождение (город) · Сергей Петров', skills:['Параллельная парковка','Разворот'], hasSkills:true, note:null},
+      {d:'Пн, 14 июля', t:'10:00–11:30', status:'Проведено', sBg:'#EAFBF1', sC:'#15803D', sub:'Вождение (город) · Сергей Петров', skills:['Старт и остановка','Движение задним ходом'], hasSkills:true, note:null},
+      {d:'Сб, 11 июля', t:'08:00–09:30', status:'Неявка', sBg:'#FEECEC', sC:'#DC2626', sub:'Вождение (город) · Сергей Петров', skills:[], hasSkills:false, note:'Час списан по правилам отмены'}
+    ];
+    const tabOn = '#2563EB', tabOff = '#94A3B8';
+    const bookTabs = ['u3','u4','u5','u6','u7','u8'];
+    return {
+      dw: 393, dh: 852,
+      s1: scr === 'u1', s2: scr === 'u2', s3: scr === 'u3', s4: scr === 'u4', s5: scr === 'u5',
+      s6: scr === 'u6', s8: scr === 'u8', s9: scr === 'u9', s10: scr === 'u10', s11: scr === 'u11',
+      s7pay: scr === 'u7' && st.pay === 'methods',
+      s7ok: scr === 'u7' && st.pay === 'success',
+      loginPhone: st.loginStep === 'phone', loginCode: st.loginStep === 'code',
+      phoneVal: this.fmtPhone(st.phone),
+      onPhone: (e) => this.setState({phone: e.target.value.replace(/\D/g,'').slice(0,10)}),
+      sendBg: phoneReady ? '#2563EB' : '#B9C6E4',
+      sendCode: () => { if (phoneReady) this.setState({loginStep:'code'}); else this.showToast('Введите номер полностью'); },
+      editPhone: () => this.setState({loginStep:'phone', code:['','','','']}),
+      resend: () => this.showToast('Код отправлен повторно'),
+      toApply: () => this.go('u9'),
+      codeCells,
+      nextDate: st.nextLesson.date, nextTime: st.nextLesson.time,
+      bookedCard: !!st.booked,
+      bookedDate: st.booked ? st.booked.date : '', bookedTime: st.booked ? st.booked.time : '',
+      reschedule: () => { this.setState({bType:'package', resched:true, instId:'sergey', day:0, slot:null}); this.go('u5'); },
+      cancelInfo: () => this.showToast('Отмена бесплатна до 17:00 сегодня — за 24 ч до занятия'),
+      qBook: () => this.nav('u3'),
+      qPay: () => this.showToast('Пополнение пакета часов — в следующей версии'),
+      qTheory: () => this.nav('u10'),
+      pickPackage: () => { this.setState({bType:'package', resched:false}); this.go('u4'); },
+      pickExtra: () => { this.setState({bType:'extra', resched:false}); this.go('u4'); },
+      toExams: () => this.go('u8'),
+      bookLabel,
+      brChips, gbChips, others, noOthers: others.length === 0,
+      pickMine: () => { this.setState({instId:'sergey', day:0, slot:null}); this.go('u5'); },
+      instName: inst.name, instCar: inst.car, instGb: inst.gb, instBr: inst.br,
+      week, slots, hasSlots, noSlots: !hasSlots, dayFull: this.W[st.day].full,
+      contBg: st.slot != null ? '#2563EB' : '#C3CDDE',
+      contGo: () => { if (st.slot != null) this.go('u6'); else this.showToast('Выберите свободный слот'); },
+      confTime: this.slotLabel(), confDate: this.W[st.day].full.charAt(0).toUpperCase() + this.W[st.day].full.slice(1),
+      confShort: this.W[st.day].short,
+      isExtra,
+      confCta: st.resched ? 'Перенести занятие' : (isExtra ? 'Оплатить и записаться' : 'Записаться'),
+      doConfirm: () => {
+        if (isExtra){ this.setState({pay:'methods', paying:false}); this.go('u7'); }
+        else { this.completeBooking(); this.go('u7'); }
+      },
+      paying: st.paying, payingNo: !st.paying,
+      paySbp: () => { if (!st.paying){ this.setState({paying:true}); setTimeout(() => this.completeBooking(), 1100); } },
+      payCard: () => { if (!st.paying){ this.setState({paying:true}); setTimeout(() => this.completeBooking(), 1100); } },
+      okTitle: st.resched ? 'Занятие перенесено!' : 'Вы записаны!',
+      toHome: () => this.setState({screen:'u2', hist:[], resched:false, slot:null, pay:'methods'}),
+      gDates, gibddNo: !st.gibddSent, gibddYes: st.gibddSent,
+      applyGibdd: () => { this.setState({gibddSent:true}); this.showToast('Заявка на экзамен в ГИБДД отправлена'); },
+      appFormShow: !st.appSent, appSent: st.appSent,
+      aName: st.aName, onAName: (e) => this.setState({aName: e.target.value}),
+      aPhoneVal: this.fmtPhone(st.aPhone),
+      onAPhone: (e) => this.setState({aPhone: e.target.value.replace(/\D/g,'').slice(0,10)}),
+      aBrChips, aGbChips, aTimeChips,
+      appBg: aReady ? '#2563EB' : '#B9C6E4',
+      sendApp: () => { if (aReady) this.setState({appSent:true}); else this.showToast('Заполните имя и телефон'); },
+      appBack: () => this.setState({screen:'u1', appSent:false, hist:[]}),
+      qTheoryOut: () => this.showToast('Откроется приложение ПРОФТЕХ'),
+      segIsFuture: st.seg === 'future', segIsPast: st.seg === 'past',
+      segFuture: () => this.setState({seg:'future'}), segPast: () => this.setState({seg:'past'}),
+      segFBg: st.seg === 'future' ? '#FFFFFF' : 'transparent', segFC: st.seg === 'future' ? '#0F1E3D' : '#64748B',
+      segFSh: st.seg === 'future' ? '0 1px 4px rgba(15,30,61,.1)' : 'none',
+      segPBg: st.seg === 'past' ? '#FFFFFF' : 'transparent', segPC: st.seg === 'past' ? '#0F1E3D' : '#64748B',
+      segPSh: st.seg === 'past' ? '0 1px 4px rgba(15,30,61,.1)' : 'none',
+      futureL, pastL,
+      showTab: scr !== 'u1' && scr !== 'u9',
+      tHomeC: scr === 'u2' ? tabOn : tabOff,
+      tBookC: bookTabs.includes(scr) ? tabOn : tabOff,
+      tLessC: scr === 'u11' ? tabOn : tabOff,
+      tTheoC: scr === 'u10' ? tabOn : tabOff,
+      tabHome: () => this.nav('u2'), tabBook: () => this.nav('u3'),
+      tabLessons: () => this.nav('u11'), tabTheory: () => this.nav('u10'),
+      tabProfile: () => this.showToast('Профиль — вне объёма MVP'),
+      toastMsg: st.toast,
+      codeBadge: (this.props.showCodes ?? true) ? this.CODES[scr] : null
+    };
+  }
+}
+</script>
+</body>
+</html>

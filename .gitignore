@@ -1,0 +1,10 @@
+# исходники генерации — тяжёлые PNG и служебные файлы, на Pages не нужны
+assets/generated/*.png
+assets/generated/gen.sh
+assets/generated/gen.log
+assets/generated/gen-err.log
+assets/generated/prompts.tsv
+assets/generated/postprocess.py
+# референсные скриншоты из дизайн-проекта
+uploads/
+.DS_Store
