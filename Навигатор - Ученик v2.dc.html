@@ -71,8 +71,24 @@ input::placeholder{color:#94A3B8}
         </div>
       </div>
       <div onClick="{{doEnter}}" style="margin-top:11px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{enterBg}};box-shadow:{{enterSh}};cursor:pointer" style-active="transform:scale(.98)">Войти</div>
-      <div onClick="{{toReg}}" style="margin-top:9px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14.5px;font-weight:600;color:#1E3A8A;background:rgba(37,99,235,.09);border:1px solid rgba(37,99,235,.18);cursor:pointer" style-active="transform:scale(.98)">Хочу учиться — оставить заявку</div>
-      <div style="margin-top:11px;text-align:center;font-size:12.5px;color:#94A3B8">Забыли пароль? Обратитесь к администратору филиала</div>
+      <div onClick="{{toCodeReg}}" style="margin-top:9px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14.5px;font-weight:600;color:#1E3A8A;background:rgba(37,99,235,.09);border:1px solid rgba(37,99,235,.18);cursor:pointer" style-active="transform:scale(.98)">Зарегистрироваться по коду</div>
+      <div style="margin-top:11px;text-align:center;font-size:13px;color:#64748B">Хотите учиться у нас? <span onClick="{{toReg}}" style="color:#2563EB;font-weight:600;cursor:pointer">Оставить заявку</span></div>
+      <div style="margin-top:5px;text-align:center;font-size:12px;color:#94A3B8">Забыли пароль? Обратитесь к администратору филиала</div>
+    </div>
+  </sc-if>
+  <sc-if value="{{loginCodeReg}}">
+    <div>
+      <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Регистрация по коду</div>
+      <div style="margin-top:4px;font-size:13px;color:#64748B;line-height:1.45">Код выдаёт администратор при заключении договора. Введите его и придумайте пароль</div>
+      <input value="{{invVal}}" onChange="{{onInv}}" placeholder="НВ-0000" style="margin-top:14px;width:100%;height:54px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;text-align:center;font-size:22px;font-weight:800;letter-spacing:4px;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <div style="margin-top:9px;display:flex;align-items:center;gap:8px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:15px;height:52px;padding:0 8px 0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
+        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" placeholder="Придумайте пароль" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+        <div onClick="{{togglePwd}}" style="width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:{{pwdEyeOp}}" style-active="background:#F1F4F8">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" stroke="#64748B" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" stroke="#64748B" stroke-width="1.8"/></svg>
+        </div>
+      </div>
+      <div onClick="{{codeRegGo}}" style="margin-top:11px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{codeRegBg}};box-shadow:{{codeRegSh}};cursor:pointer" style-active="transform:scale(.98)">Зарегистрироваться</div>
+      <div onClick="{{backToPhone}}" style="margin-top:12px;text-align:center;font-size:13.5px;color:#64748B;cursor:pointer">У меня уже есть аккаунт — <span style="color:#2563EB;font-weight:600">войти</span></div>
     </div>
   </sc-if>
   <sc-if value="{{loginReg}}">
@@ -685,7 +701,7 @@ input::placeholder{color:#94A3B8}
   <sc-if value="{{isAdmin}}">
     <div onClick="{{toAdmin}}" style="border-radius:20px;padding:16px 18px;background:linear-gradient(135deg,#12275C 0%,#1E3A8A 55%,#2563EB 140%);display:flex;align-items:center;gap:13px;cursor:pointer;box-shadow:0 12px 30px rgba(30,58,138,.3)" style-active="transform:scale(.985)">
       <div style="width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;flex:none"><img src="assets/generated/i-key.webp" alt="" style="width:30px;height:30px;object-fit:contain"></div>
-      <div style="flex:1"><div style="font-size:15.5px;font-weight:700;color:#FFFFFF">Администрирование</div><div style="font-size:12.5px;color:rgba(255,255,255,.65);margin-top:1px">Доступы · ученики · инструкторы</div></div>
+      <div style="flex:1"><div style="font-size:15.5px;font-weight:700;color:#FFFFFF">Администрирование</div><div style="font-size:12.5px;color:rgba(255,255,255,.65);margin-top:1px">Коды регистрации · ученики · инструкторы</div></div>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M9 6l6 6-6 6" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </sc-if>
@@ -728,7 +744,7 @@ input::placeholder{color:#94A3B8}
 <div style="flex:1;overflow-y:auto;padding:4px 16px 20px;display:flex;flex-direction:column;gap:12px">
   <sc-if value="{{segCodes}}" hint-placeholder-val="{{ true }}">
     <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;flex-direction:column;gap:13px">
-      <div style="font-size:16px;font-weight:700">Новый доступ в приложение</div>
+      <div style="font-size:16px;font-weight:700">Новый код регистрации</div>
       <div>
         <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Кому выдаём код</div>
         <div style="display:flex;gap:8px">
@@ -777,17 +793,15 @@ input::placeholder{color:#94A3B8}
           </div>
         </div>
       </sc-if>
-      <div onClick="{{admGen}}" style="height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:600;color:#FFFFFF;background:{{admBg}};box-shadow:{{admSh}};cursor:pointer" style-active="transform:scale(.98)">Сформировать доступ</div>
+      <div onClick="{{admGen}}" style="height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:600;color:#FFFFFF;background:{{admBg}};box-shadow:{{admSh}};cursor:pointer" style-active="transform:scale(.98)">Сформировать код</div>
     </div>
     <sc-if value="{{admHasCode}}">
       <div style="background:#FFFFFF;border:1.5px dashed #93B4F5;border-radius:20px;padding:20px;display:flex;flex-direction:column;align-items:center;animation:popIn .35s ease;position:relative;overflow:hidden;flex:none">
         <img src="assets/generated/d6-key.webp" alt="" style="position:absolute;right:-6px;bottom:2px;width:84px;opacity:.55;pointer-events:none;transform:rotate(-8deg)">
-        <div style="font-size:12px;font-weight:600;color:#64748B">Доступ для: {{admCodeFor}}</div>
-        <div style="margin-top:10px;width:100%;display:flex;flex-direction:column;gap:7px">
-          <div style="display:flex;align-items:center;justify-content:space-between;background:#F5F8FF;border-radius:12px;padding:9px 14px"><span style="font-size:12px;font-weight:600;color:#64748B">Логин</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:16px;font-weight:800;color:#1E3A8A">{{admLogin}}</span></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;background:#F5F8FF;border-radius:12px;padding:9px 14px"><span style="font-size:12px;font-weight:600;color:#64748B">Пароль</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:16px;font-weight:800;color:#1E3A8A">{{admPass}}</span></div>
-        </div>
-        <div style="margin-top:8px;font-size:12.5px;color:#64748B;text-align:center">{{admCodeSub}}</div>
+        <div style="font-size:12px;font-weight:600;color:#64748B">Код регистрации для: {{admCodeFor}}</div>
+        <div style="margin-top:8px;font-size:34px;font-weight:800;letter-spacing:5px;color:#1E3A8A">{{admCodeVal}}</div>
+        <div style="margin-top:5px;font-size:12.5px;color:#64748B;text-align:center">{{admCodeSub}}</div>
+        <div style="margin-top:7px;background:#F5F8FF;border-radius:10px;padding:6px 12px;font-size:12px;color:#64748B">Логин после регистрации: <span style="font-family:ui-monospace,Menlo,monospace;font-weight:800;color:#1E3A8A">{{admCodeLogin}}</span></div>
         <div style="margin-top:14px;display:flex;gap:9px;width:100%">
           <div onClick="{{admCopy}}" style="flex:1;height:44px;border-radius:13px;background:#EFF4FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Скопировать</div>
           <div onClick="{{admReset}}" style="flex:1;height:44px;border-radius:13px;background:#F1F4F8;color:#0F1E3D;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Выдать ещё</div>
@@ -992,10 +1006,10 @@ class Component extends DCLogic {
     const ini = p.slice(1,3).map(w => this.translit((w[0] || ''))).join('').replace(/[^a-z]/g,'');
     return sur + (ini ? '.' + ini : '');
   }
-  genPass(){ const C = 'bdfgkmnprstvz', V = 'aeiou', D = '23456789', r = (s) => s[Math.floor(Math.random() * s.length)]; return r(C)+r(V)+r(C)+r(V)+r(C)+'-'+r(D)+r(D); }
+  genCode(){ const A = 'АВЕКМНРСТХ', D = '23456789', r = (s) => s[Math.floor(Math.random() * s.length)]; return 'НВ-' + r(A) + r(D) + r(A) + r(D); }
   INITIAL(){
     return {
-      screen:'u1', loginStep:'phone', phone:'', lgn:'', pwd:'', showPwd:false, regName:'',
+      screen:'u1', loginStep:'phone', phone:'', lgn:'', pwd:'', showPwd:false, invCode:'', regName:'',
       bType:'extra', resched:false, instId:'sergey', day:0, slot:null,
       fBr:'Все', fGb:'Все',
       pay:'methods', paying:false, booked:null,
@@ -1105,6 +1119,7 @@ class Component extends DCLogic {
         onPick: () => { this.setState({instId:i.id, day:0, slot:null}); this.go('u5'); }}));
     const phoneReady = st.phone.length === 10;
     const loginReady = st.lgn.trim().length > 0 && st.pwd.length >= 4;
+    const codeRegReady = st.invCode.replace(/[^А-ЯA-Z0-9]/gi,'').length >= 6 && st.pwd.length >= 4;
     const isExtra = st.bType === 'extra' && !st.resched;
     const bookLabel = st.resched ? 'Перенос занятия' : (st.bType === 'extra' ? 'Доп занятие · 2 000 ₽' : 'Занятие по пакету');
     const gDatesRaw = [{label:'Вт, 11 августа', seats:'Мест: 3 из 10'}, {label:'Чт, 27 августа', seats:'Мест: 10 из 10'}];
@@ -1122,7 +1137,7 @@ class Component extends DCLogic {
     const admInstChips = this.INST.map(i => ({label: surname(i.name), ...this.chip(st.admInst === i.name), onTap: () => this.setState({admInst: i.name})}));
     const issuedRows = st.issued.map(p => ({role:p.role, name:p.name, inst:p.inst,
       sub:(p.role === 'Ученик' ? p.grp + ' · ' : '') + p.br + (p.role === 'Ученик' ? ' · пакет ' + p.pkg.split('· ')[1] : ''),
-      status:'Доступ выдан', sBg:'#EFF4FF', sC:'#2563EB', code:p.login, hasCode:true}));
+      status:'Код выдан', sBg:'#EFF4FF', sC:'#2563EB', code:p.code, hasCode:true}));
     const admStudents = [...issuedRows.filter(x => x.role === 'Ученик'),
       {name:'Анна Смирнова', sub:'Б-142 · Ясенево · пакет 28 ч', inst:'Сергей Петров', status:'Активна', sBg:'#EAFBF1', sC:'#15803D'},
       {name:'Игорь Волков', sub:'Б-142 · Тёплый Стан · пакет 40 ч', inst:'Дмитрий Соколов', status:'Ожидает оплаты', sBg:'#FEF6E7', sC:'#B45309'},
@@ -1133,7 +1148,7 @@ class Component extends DCLogic {
     });
     const admInstructors = [...issuedRows.filter(x => x.role === 'Инструктор'),
       ...this.INST.map(i => ({name:i.name, sub:i.br + ' · ' + i.car + ' · ' + i.gb, status:'Активен', sBg:'#EAFBF1', sC:'#15803D'}))];
-    const admSegs = [{k:'codes',l:'Доступы'},{k:'students',l:'Ученики'},{k:'inst',l:'Инструкторы'}].map(s => ({label:s.l, ...this.chip(st.aSeg === s.k), onTap:() => this.setState({aSeg:s.k})}));
+    const admSegs = [{k:'codes',l:'Коды'},{k:'students',l:'Ученики'},{k:'inst',l:'Инструкторы'}].map(s => ({label:s.l, ...this.chip(st.aSeg === s.k), onTap:() => this.setState({aSeg:s.k})}));
     const futureL = [
       st.nextLesson ? {when: st.nextLesson.date === 'Завтра' ? 'Завтра, воскресенье' : st.nextLesson.date, time: st.nextLesson.time, what:'Вождение (город)', who:'Сергей Петров', where:'м. Ясенево', isNew:false} : null,
       st.booked ? {when: st.booked.date, time: st.booked.time, what:'Доп занятие (город)', who: inst.name, where:'м. ' + inst.br, isNew:true} : null,
@@ -1177,6 +1192,18 @@ class Component extends DCLogic {
         if (!st.lgn.trim()){ this.showToast('Введите логин'); return; }
         if (st.pwd.length < 4){ this.showToast('Пароль — минимум 4 символа'); return; }
         this.setState({screen:'u2', hist:[], pwd:'', showPwd:false});
+      },
+      loginCodeReg: st.loginStep === 'codereg',
+      toCodeReg: () => this.setState({loginStep:'codereg', pwd:'', showPwd:false}),
+      invVal: st.invCode,
+      onInv: (e) => this.setState({invCode: e.target.value.toUpperCase().slice(0,8)}),
+      codeRegBg: codeRegReady ? this.GRAD : '#B9C6E4',
+      codeRegSh: codeRegReady ? this.CTASH : 'none',
+      codeRegGo: () => {
+        if (st.invCode.replace(/[^А-ЯA-Z0-9]/gi,'').length < 6){ this.showToast('Введите код полностью — например, НВ-2415'); return; }
+        if (st.pwd.length < 4){ this.showToast('Пароль — минимум 4 символа'); return; }
+        this.setState({screen:'u2', hist:[], loginStep:'phone', invCode:'', pwd:'', showPwd:false});
+        this.showToast('Профиль активирован — добро пожаловать в «Навигатор»!');
       },
       loginReg: st.loginStep === 'reg',
       toReg: () => this.setState({loginStep:'reg'}),
@@ -1274,11 +1301,11 @@ class Component extends DCLogic {
       admSh: admReady ? this.CTASH : 'none',
       admGen: () => {
         if (!admReady){ this.showToast('Введите фамилию, имя и отчество'); return; }
-        const login = this.genLogin(st.admName), pass = this.genPass();
-        this.setState(s => ({admCode: {login, pass}, issued: [{name: s.admName.trim(), role: s.admRole, br: s.admBr, grp: s.admGrp, pkg: s.admPkg, inst: s.admInst, login}, ...s.issued]}));
+        const code = this.genCode(), login = this.genLogin(st.admName);
+        this.setState(s => ({admCode: {code, login}, issued: [{name: s.admName.trim(), role: s.admRole, br: s.admBr, grp: s.admGrp, pkg: s.admPkg, inst: s.admInst, code}, ...s.issued]}));
       },
-      admLogin: st.admCode ? st.admCode.login : '',
-      admPass: st.admCode ? st.admCode.pass : '',
+      admCodeVal: st.admCode ? st.admCode.code : '',
+      admCodeLogin: st.admCode ? st.admCode.login : '',
       admHasCode: !!st.admCode, admNoCode: !st.admCode,
       admCodeFor: st.admName.trim(),
       admCodeSub: st.admRole + ' · ' + st.admBr + (admIsStudent ? ' · ' + st.admGrp + ' · пакет ' + st.admPkg.split('· ')[1] + ' · инстр. ' + surname(st.admInst) : ''),
@@ -1291,7 +1318,7 @@ class Component extends DCLogic {
         bd: st.instSheet && st.instSheet.cur === i.name ? '#2563EB' : '#E2E8F0',
         bg: st.instSheet && st.instSheet.cur === i.name ? '#F5F8FF' : '#FFFFFF',
         onTap: () => { const nm = st.instSheet.name; this.setState(s => ({stuInst: {...s.stuInst, [nm]: i.name}, instSheet:null})); this.showToast('Инструктор обновлён: ' + i.name); }})),
-      admCopy: () => this.showToast('Логин и пароль скопированы в буфер'),
+      admCopy: () => this.showToast('Код скопирован в буфер'),
       admReset: () => this.setState({admName:'', admCode:null}),
       admStudents, admInstructors,
       qTheoryOut: () => this.showToast('Откроется приложение ИСО ПРОФТЕХ'),
