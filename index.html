@@ -61,9 +61,24 @@ input::placeholder{color:#94A3B8}
     frame.style.transformOrigin = 'center center';
     frame.style.transform = 'scale(' + s + ')';
   }
-  ['resize','orientationchange','load'].forEach(function(e){ window.addEventListener(e, fit); });
-  new MutationObserver(fit).observe(document.documentElement, {childList:true, subtree:true});
-  setTimeout(fit, 60); setTimeout(fit, 400);
+  // Карточки в прокручиваемых колонках не должны сжиматься: у части из них
+  // overflow:hidden, и сжатие срезает содержимое (например, строку «Поддержка»).
+  function unshrink(){
+    var boxes = document.querySelectorAll('div');
+    for (var i = 0; i < boxes.length; i++){
+      var cs = getComputedStyle(boxes[i]);
+      if (cs.display !== 'flex' || cs.flexDirection !== 'column') continue;
+      if (cs.overflowY !== 'auto' && cs.overflowY !== 'scroll') continue;
+      var kids = boxes[i].children;
+      for (var k = 0; k < kids.length; k++){
+        if (kids[k].style && kids[k].style.flexShrink !== '0') kids[k].style.flexShrink = '0';
+      }
+    }
+  }
+  function tick(){ fit(); unshrink(); }
+  ['resize','orientationchange','load'].forEach(function(e){ window.addEventListener(e, tick); });
+  new MutationObserver(tick).observe(document.documentElement, {childList:true, subtree:true});
+  setTimeout(tick, 60); setTimeout(tick, 400);
 })();
 </script>
 <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px 16px">
