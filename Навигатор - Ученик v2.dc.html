@@ -8,6 +8,14 @@
 <body>
 <x-dc>
 <helmet>
+<title>Навигатор — приложение ученика автошколы</title>
+<meta name="description" content="Прототип мобильного приложения для сети автошкол «Навигатор»: запись на занятия, оплата, теория ПДД и админка.">
+<meta name="theme-color" content="#E8F1FD">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Навигатор">
+<link rel="apple-touch-icon" href="assets/app-icon-180.png">
+<link rel="icon" href="assets/app-icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,11 +36,39 @@ input::placeholder{color:#94A3B8}
 @keyframes kenburns{from{transform:scale(1) translateY(0)}to{transform:scale(1.12) translateY(-14px)}}
 @keyframes riseIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
 @keyframes confDrift{from{transform:scale(.92) rotate(-3deg)}to{transform:scale(1.04) rotate(3deg)}}
+/* На телефоне рамка устройства масштабируется под экран — см. скрипт ниже */
+@media (max-width:520px){
+  body{overflow:hidden}
+  body>div:first-of-type{padding:0!important;min-height:100svh!important;height:100svh!important;overflow:hidden}
+}
 </style>
 </helmet>
+<script>
+// Демо открывают с телефона: вписываем макет 393×852 в экран целиком,
+// иначе flex сжимает рамку по ширине и срезает таб-бар.
+(function(){
+  var W = 393, H = 852;
+  function fit(){
+    var frame = document.querySelector('div[style*="393px"][style*="852px"]');
+    if (!frame) return;
+    var narrow = window.innerWidth <= 520;
+    frame.style.flex = '0 0 auto';
+    if (!narrow){ frame.style.transform = ''; return; }
+    var outer = frame.parentElement;
+    while (outer && outer.offsetHeight === 0) outer = outer.parentElement;
+    if (outer){ outer.style.padding = '0'; outer.style.minHeight = '0'; outer.style.height = window.innerHeight + 'px'; outer.style.overflow = 'hidden'; }
+    var s = Math.min(window.innerWidth / W, window.innerHeight / H);
+    frame.style.transformOrigin = 'center center';
+    frame.style.transform = 'scale(' + s + ')';
+  }
+  ['resize','orientationchange','load'].forEach(function(e){ window.addEventListener(e, fit); });
+  new MutationObserver(fit).observe(document.documentElement, {childList:true, subtree:true});
+  setTimeout(fit, 60); setTimeout(fit, 400);
+})();
+</script>
 <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px 16px">
 <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" width="{{dw}}" height="{{dh}}" hint-size="393px,852px">
-<div style="position:relative;height:100%;display:flex;flex-direction:column;background:linear-gradient(180deg,#E8F1FD 0%,#EFF4FC 36%,#F3F6FB 100%);font-family:'Inter',system-ui,sans-serif;color:#0F1E3D">
+<div style="position:relative;height:100%;display:flex;flex-direction:column;background:linear-gradient(180deg,#D6E7FC 0%,#E3EEFB 36%,#ECF2FA 100%);font-family:'Inter',system-ui,sans-serif;color:#0F1E3D">
 
 <!-- ═══ У-1 Вход ═══ -->
 <sc-if value="{{s1}}" hint-placeholder-val="{{ true }}">
@@ -611,14 +647,17 @@ input::placeholder{color:#94A3B8}
   </div>
   <sc-if value="{{segIsFuture}}" hint-placeholder-val="{{ true }}">
     <sc-for list="{{futureL}}" as="l" hint-placeholder-count="2">
-      <div style="background:#FFFFFF;border-radius:20px;padding:17px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+      <div onClick="{{l.onTap}}" style="background:#FFFFFF;border-radius:20px;padding:17px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);cursor:pointer" style-active="transform:scale(.99)">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
           <div style="font-size:22px;font-weight:800;letter-spacing:-.4px">{{l.time}}</div>
           <sc-if value="{{l.isNew}}"><div style="background:#EAFBF1;color:#15803D;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;flex:none">Новое</div></sc-if>
         </div>
         <div style="font-size:14px;color:#64748B;margin-top:2px">{{l.when}}</div>
         <div style="margin-top:10px;font-size:13.5px;color:#475569;font-weight:500">{{l.what}} · {{l.who}}</div>
-        <div style="margin-top:5px;display:flex;align-items:center;gap:7px;font-size:13px;color:#64748B"><span style="width:7px;height:7px;border-radius:50%;background:#2563EB;flex:none"></span>Подача: {{l.where}}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="margin-top:5px;display:flex;align-items:center;gap:7px;font-size:13px;color:#64748B"><span style="width:7px;height:7px;border-radius:50%;background:#2563EB;flex:none"></span>Подача: {{l.where}}</div>
+          <div style="margin-top:5px;font-size:12.5px;font-weight:600;color:#2563EB;flex:none">Подробнее ›</div>
+        </div>
       </div>
     </sc-for>
     <sc-if value="{{noFuture}}">
@@ -943,6 +982,33 @@ input::placeholder{color:#94A3B8}
   </div>
 </div>
 </sc-if>
+<sc-if value="{{lsnSheet}}">
+<div style="position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;justify-content:flex-end">
+  <div onClick="{{lsnClose}}" style="position:absolute;inset:0;background:rgba(15,30,61,.45);animation:fadeIn .2s ease"></div>
+  <div style="position:relative;background:#F6F8FB;border-radius:24px 24px 0 0;padding:10px 16px 30px;animation:sheetUp .28s ease">
+    <div style="width:40px;height:4px;border-radius:2px;background:#D6DEE8;margin:0 auto"></div>
+    <div style="margin-top:14px;font-size:12px;font-weight:600;color:#64748B">{{lsnWhen}}</div>
+    <div style="margin-top:2px;font-size:24px;font-weight:800;letter-spacing:-.4px">{{lsnTime}}</div>
+    <div style="margin-top:3px;font-size:14px;color:#64748B">{{lsnWhat}}</div>
+    <div style="margin-top:14px;background:#FFFFFF;border-radius:18px;padding:14px;display:flex;align-items:center;gap:12px;border:1px solid #E9EEF6">
+      <div style="width:52px;height:52px;flex:none"><x-import src="assets/generated/slot-inst-sergey.webp" component-from-global-scope="image-slot" from="./image-slot.js" id="slot-inst-sergey" shape="circle" placeholder="Фото" hint-size="52px,52px" style="width:52px;height:52px"></x-import></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:15.5px;font-weight:700">{{lsnWho}}</div>
+        <div style="font-size:12.5px;color:#64748B;margin-top:2px">{{lsnCar}} · подача: {{lsnWhere}}</div>
+      </div>
+    </div>
+    <div style="margin-top:9px;display:flex;gap:9px">
+      <div onClick="{{lsnCall}}" style="flex:1;height:48px;border-radius:15px;background:#FFFFFF;border:1px solid #E9EEF6;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14.5px;font-weight:600;color:#0F1E3D;cursor:pointer" style-active="transform:scale(.98)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 006 6l1.5-2 4 1.5v3a2 2 0 01-2.2 2A17 17 0 014.5 5.7 2 2 0 016.5 3.5z" stroke="#2563EB" stroke-width="1.8" stroke-linejoin="round"/></svg>Позвонить</div>
+      <div onClick="{{lsnChat}}" style="flex:1;height:48px;border-radius:15px;background:#FFFFFF;border:1px solid #E9EEF6;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14.5px;font-weight:600;color:#0F1E3D;cursor:pointer" style-active="transform:scale(.98)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 4.5L2.8 11.6c-.9.35-.85 1.6.07 1.88l4.63 1.45 1.75 5.5c.28.88 1.4 1.05 1.93.3l2.5-3.55 4.7 3.45c.75.55 1.8.14 1.98-.77L23 5.8c.2-1-.8-1.8-2-1.3z" fill="#2563EB"/></svg>Написать</div>
+    </div>
+    <div style="margin-top:9px;display:flex;gap:9px">
+      <div onClick="{{lsnResched}}" style="flex:1;height:48px;border-radius:15px;background:#EFF4FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Перенести</div>
+      <div onClick="{{lsnCancel}}" style="flex:1;height:48px;border-radius:15px;background:#FEECEC;color:#DC2626;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:600;cursor:pointer" style-active="transform:scale(.98)">Отменить</div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:#64748B;line-height:1.45"><span style="color:#22C55E;font-weight:800">✓</span>Отмена бесплатна, если до занятия больше 24 часов</div>
+  </div>
+</div>
+</sc-if>
 <sc-if value="{{cancelSheet}}">
 <div style="position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;justify-content:flex-end">
   <div onClick="{{cancelNo}}" style="position:absolute;inset:0;background:rgba(15,30,61,.45);animation:fadeIn .2s ease"></div>
@@ -1012,7 +1078,7 @@ class Component extends DCLogic {
       tDone:14, tq:{i:0, sel:null, corr:0, done:false, topic:15},
       aSeg:'codes', admName:'', admRole:'Ученик', admBr:'Ясенево', admGrp:'Б-142', admPkg:'Город · 28 ч', admInst:'Сергей Петров', admCode:null, issued:[], stuInst:{}, instSheet:null,
       cityHours:12, dopHours:2, pkgTotal:28, paySheet:false, payPick:1, topStep:'pick', topMethod:'sbp',
-      cancelSheet:false, cancelN:0, brShow:false, notifOn:true,
+      cancelSheet:false, cancelN:0, brShow:false, notifOn:true, lsnSheet:null,
       toast:null, hist:[]
     };
   }
@@ -1147,7 +1213,7 @@ class Component extends DCLogic {
       st.nextLesson ? {when: st.nextLesson.date === 'Завтра' ? 'Завтра, воскресенье' : st.nextLesson.date, time: st.nextLesson.time, what:'Вождение (город)', who:'Сергей Петров', where:'м. Ясенево', isNew:false} : null,
       st.booked ? {when: st.booked.date, time: st.booked.time, what:'Доп занятие (город)', who: inst.name, where:'м. ' + inst.br, isNew:true} : null,
       st.cancelN === 0 ? {when:'Ср, 22 июля', time:'10:00–11:30', what:'Вождение (город)', who:'Сергей Петров', where:'м. Ясенево', isNew:false} : null
-    ].filter(Boolean);
+    ].filter(Boolean).map(l => ({...l, onTap: () => this.setState({lsnSheet: l})}));
     const payOpts = [{h:5,p:'9 500 ₽'},{h:10,p:'18 000 ₽',tag:'Выгодно'},{h:20,p:'34 000 ₽'}].map((o,i) => ({
       ...o, hLabel: o.h + ' часов', sub: Math.round(parseInt(o.p.replace(/\D/g,'')) / o.h).toLocaleString('ru-RU') + ' ₽ / час',
       bd: st.payPick === i ? '#2563EB' : '#E2E8F0', bg: st.payPick === i ? '#F5F8FF' : '#FFFFFF',
@@ -1371,6 +1437,18 @@ class Component extends DCLogic {
       segPBg: st.seg === 'past' ? '#FFFFFF' : 'transparent', segPC: st.seg === 'past' ? '#0F1E3D' : '#64748B',
       segPSh: st.seg === 'past' ? '0 1px 4px rgba(15,30,61,.1)' : 'none',
       futureL, pastL,
+      lsnSheet: !!st.lsnSheet,
+      lsnWhen: st.lsnSheet ? st.lsnSheet.when : '',
+      lsnTime: st.lsnSheet ? st.lsnSheet.time : '',
+      lsnWhat: st.lsnSheet ? st.lsnSheet.what : '',
+      lsnWho: st.lsnSheet ? st.lsnSheet.who : '',
+      lsnWhere: st.lsnSheet ? st.lsnSheet.where : '',
+      lsnCar: st.lsnSheet ? ((this.INST.find(i => i.name === st.lsnSheet.who) || this.INST[0]).car) : '',
+      lsnClose: () => this.setState({lsnSheet:null}),
+      lsnCall: () => { this.setState({lsnSheet:null}); this.showToast('Звоним инструктору: +7 (916) 452-13-08'); },
+      lsnChat: () => { this.setState({lsnSheet:null}); this.showToast('Откроется чат с инструктором в Telegram'); },
+      lsnResched: () => { this.setState({lsnSheet:null, bType:'package', resched:true, instId:'sergey', day:0, slot:null}); this.go('u5'); },
+      lsnCancel: () => this.setState({lsnSheet:null, cancelSheet:true}),
       showTab: scr !== 'u1' && scr !== 'u9',
       tHomeC: scr === 'u2' ? tabOn : tabOff,
       tHomeF: scr === 'u2' ? 'none' : 'grayscale(1) opacity(.45)',
