@@ -14,6 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Навигатор">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="assets/app-icon-180.png">
 <link rel="icon" href="assets/app-icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,11 +59,31 @@ input::placeholder{color:#64748B}
 // иначе flex сжимает рамку по ширине и срезает таб-бар.
 (function(){
   var W = 393, H = 852;
+  // «Установленный» режим (добавлено на экран «Домой»): системная строка статуса
+  // и полоска home настоящие, поэтому макетную рамку телефона убираем целиком.
+  var STANDALONE = window.navigator.standalone === true
+    || window.matchMedia('(display-mode: standalone)').matches
+    || /[?&]standalone=1/.test(location.search);
   function fit(){
     var frame = document.querySelector('div[style*="393px"][style*="852px"]');
     if (!frame) return;
-    var narrow = window.innerWidth <= 520;
     frame.style.flex = '0 0 auto';
+    if (STANDALONE){
+      [].forEach.call(frame.children, function(c){
+        if (getComputedStyle(c).position === 'absolute') c.style.display = 'none';
+      });
+      frame.style.width = '100%';
+      frame.style.height = window.innerHeight + 'px';
+      frame.style.borderRadius = '0';
+      frame.style.boxShadow = 'none';
+      frame.style.transform = 'none';
+      var outerS = frame.parentElement;
+      while (outerS && outerS.offsetHeight === 0) outerS = outerS.parentElement;
+      if (outerS){ outerS.style.padding = '0'; outerS.style.minHeight = '0'; outerS.style.height = window.innerHeight + 'px'; }
+      document.body.style.background = '#E8F1FD';
+      return;
+    }
+    var narrow = window.innerWidth <= 520;
     if (!narrow){ frame.style.transform = ''; return; }
     var outer = frame.parentElement;
     while (outer && outer.offsetHeight === 0) outer = outer.parentElement;
