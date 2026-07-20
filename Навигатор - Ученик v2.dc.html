@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -346,9 +346,9 @@ input::placeholder{color:#64748B}
     <div>
       <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Вход в личный кабинет</div>
       <div style="margin-top:4px;font-size:13px;color:#64748B">Логин и пароль выдаёт администратор при заключении договора</div>
-      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Логин — например, ivanov.pa" aria-label="Логин" name="login" autocomplete="username" autocapitalize="none" style="margin-top:14px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Логин — например, ivanov.pa" aria-label="Логин" name="login" autocomplete="username" autocapitalize="none" style="margin-top:14px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:16px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
       <div style="margin-top:9px;display:flex;align-items:center;gap:8px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:15px;height:52px;padding:0 8px 0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
-        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" aria-label="Пароль" name="password" autocomplete="current-password" placeholder="Пароль" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" aria-label="Пароль" name="password" autocomplete="current-password" placeholder="Пароль" style="flex:1;border:none;outline:none;font-size:16px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
         <div onClick="{{togglePwd}}" style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;opacity:{{pwdEyeOp}}" style-active="background:#F1F4F8">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" stroke="#64748B" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" stroke="#64748B" stroke-width="1.8"/></svg>
         </div>
@@ -364,9 +364,9 @@ input::placeholder{color:#64748B}
       <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Регистрация по коду</div>
       <div style="margin-top:4px;font-size:13px;color:#64748B;line-height:1.45">Код выдаёт администратор при заключении договора. Введите его и придумайте пароль</div>
       <input value="{{invVal}}" onChange="{{onInv}}" aria-label="Код регистрации от администратора" name="invite-code" placeholder="НВ-0000" style="margin-top:14px;width:100%;height:54px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;text-align:center;font-size:22px;font-weight:800;letter-spacing:4px;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
-      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Придумайте логин — например, anna.s" aria-label="Новый логин" name="new-login" autocomplete="username" autocapitalize="none" style="margin-top:9px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Придумайте логин — например, anna.s" aria-label="Новый логин" name="new-login" autocomplete="username" autocapitalize="none" style="margin-top:9px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:16px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
       <div style="margin-top:9px;display:flex;align-items:center;gap:8px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:15px;height:52px;padding:0 8px 0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
-        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" aria-label="Новый пароль" name="new-password" autocomplete="new-password" placeholder="Придумайте пароль" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" aria-label="Новый пароль" name="new-password" autocomplete="new-password" placeholder="Придумайте пароль" style="flex:1;border:none;outline:none;font-size:16px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
         <div onClick="{{togglePwd}}" style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;opacity:{{pwdEyeOp}}" style-active="background:#F1F4F8">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" stroke="#64748B" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" stroke="#64748B" stroke-width="1.8"/></svg>
         </div>
@@ -379,10 +379,10 @@ input::placeholder{color:#64748B}
     <div>
       <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Заявка на обучение</div>
       <div style="margin-top:4px;font-size:13px;color:#64748B">Перезвоним, подберём филиал, группу и инструктора</div>
-      <input value="{{regName}}" onChange="{{onRegName}}" aria-label="Ваше имя" name="name" autocomplete="name" placeholder="Как вас зовут?" style="margin-top:14px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <input value="{{regName}}" onChange="{{onRegName}}" aria-label="Ваше имя" name="name" autocomplete="name" placeholder="Как вас зовут?" style="margin-top:14px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:16px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
       <div style="margin-top:9px;display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:15px;height:52px;padding:0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
         <span style="font-size:15.5px;font-weight:600">+7</span>
-        <input value="{{phoneVal}}" onChange="{{onPhone}}" type="tel" aria-label="Номер телефона" name="phone" autocomplete="tel" placeholder="(999) 123-45-67" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+        <input value="{{phoneVal}}" onChange="{{onPhone}}" type="tel" aria-label="Номер телефона" name="phone" autocomplete="tel" placeholder="(999) 123-45-67" style="flex:1;border:none;outline:none;font-size:16px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
       </div>
       <div onClick="{{regGo}}" style="margin-top:11px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{regBg}};box-shadow:{{regSh}};cursor:pointer" style-active="transform:scale(.98)">Оставить заявку</div>
       <div style="margin-top:9px;display:flex;justify-content:center;gap:14px;font-size:11.5px;color:#64748B"><span>6 филиалов</span><span>·</span><span>АКПП и МКПП</span><span>·</span><span>рассрочка 0%</span></div>
@@ -1042,7 +1042,7 @@ input::placeholder{color:#64748B}
       </div>
       <div>
         <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Фамилия, имя и отчество</div>
-        <input value="{{admName}}" onChange="{{onAdmName}}" placeholder="Иванов Пётр Сергеевич" style="width:100%;height:50px;border-radius:14px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 14px;font-size:15px;font-weight:500;color:#0F1E3D;outline:none" style-focus="border-color:#2563EB">
+        <input value="{{admName}}" onChange="{{onAdmName}}" placeholder="Иванов Пётр Сергеевич" style="width:100%;height:50px;border-radius:14px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 14px;font-size:16px;font-weight:500;color:#0F1E3D;outline:none" style-focus="border-color:#2563EB">
       </div>
       <div>
         <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Филиал</div>
