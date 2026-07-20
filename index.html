@@ -199,9 +199,16 @@ input::placeholder{color:#64748B}
   // Раскладка спроектирована под «остров» (66–70px сверху, 24px снизу).
   // На других аппаратах пересчитываем, чтобы контент не жался и не подлезал.
   function adaptToDevice(){
-    // Только в установленном режиме: в браузере рамка рисует собственную шапку,
-    // и отступы макета (66–70px) обязаны её обходить — трогать их нельзя.
-    if (!STANDALONE) return;
+    var els0 = document.querySelectorAll('[data-pad]');
+    // На широком экране показываем макет телефона с нарисованной шапкой —
+    // там отступы должны остаться исходными.
+    if (!isPhone()){
+      for (var j = 0; j < els0.length; j++){
+        if (els0[j].style.paddingTop) els0[j].style.paddingTop = '';
+        if (els0[j].getAttribute('data-pad') === 'tab') els0[j].style.paddingBottom = '';
+      }
+      return;
+    }
     var i = insets();
     var top = Math.max(i.top + 12, 26);
     var bottom = Math.max(i.bottom, 10);
@@ -222,38 +229,67 @@ input::placeholder{color:#64748B}
   }
 
   var W = 393, H = 852;
-  // «Установленный» режим (добавлено на экран «Домой»): системная строка статуса
-  // и полоска home настоящие, поэтому макетную рамку телефона убираем целиком.
-  var STANDALONE = window.navigator.standalone === true
-    || window.matchMedia('(display-mode: standalone)').matches
-    || /[?&]standalone=1/.test(location.search);
+  // На любом телефоне (установлено на экран «Домой» или просто открыто в браузере)
+  // приложение занимает экран целиком: макетная рамка с нарисованной шапкой там
+  // только мешает — шапка у устройства своя. На компьютере остаётся макет телефона.
+  function isPhone(){
+    return window.navigator.standalone === true
+      || window.matchMedia('(display-mode: standalone)').matches
+      || window.innerWidth <= 520;
+  }
+  // Помечаем рамку сразу: после перевода в полноэкранный режим её инлайн-стиль
+  // меняется, и найти её по исходным 393×852 уже нельзя.
+  function getFrame(){
+    var f = document.querySelector('[data-frame="1"]');
+    if (f) return f;
+    f = document.querySelector('div[style*="393px"][style*="852px"]');
+    if (f){
+      f.setAttribute('data-frame', '1');
+      f.setAttribute('data-orig', JSON.stringify({
+        br: f.style.borderRadius, bs: f.style.boxShadow,
+        w: f.style.width, h: f.style.height
+      }));
+    }
+    return f;
+  }
+  function chrome(hide){
+    var frame = getFrame(); if (!frame) return;
+    [].forEach.call(frame.children, function(c){
+      var isChrome = c.getAttribute('data-chrome') === '1' || getComputedStyle(c).position === 'absolute';
+      if (!isChrome) return;
+      if (hide){
+        if (c.style.display !== 'none'){ c.setAttribute('data-chrome', '1'); c.style.display = 'none'; }
+      } else if (c.getAttribute('data-chrome') === '1'){
+        c.style.display = ''; c.removeAttribute('data-chrome');
+      }
+    });
+  }
   function fit(){
-    var frame = document.querySelector('div[style*="393px"][style*="852px"]');
+    var frame = getFrame();
     if (!frame) return;
     frame.style.flex = '0 0 auto';
-    if (STANDALONE){
-      [].forEach.call(frame.children, function(c){
-        if (getComputedStyle(c).position === 'absolute') c.style.display = 'none';
-      });
+    var outer = frame.parentElement;
+    while (outer && outer.offsetHeight === 0) outer = outer.parentElement;
+    if (isPhone()){
+      chrome(true);
       frame.style.width = '100%';
       frame.style.height = window.innerHeight + 'px';
       frame.style.borderRadius = '0';
       frame.style.boxShadow = 'none';
       frame.style.transform = 'none';
-      var outerS = frame.parentElement;
-      while (outerS && outerS.offsetHeight === 0) outerS = outerS.parentElement;
-      if (outerS){ outerS.style.padding = '0'; outerS.style.minHeight = '0'; outerS.style.height = window.innerHeight + 'px'; }
-      document.body.style.background = '#E8F1FD';
+      if (outer){ outer.style.padding = '0'; outer.style.minHeight = '0'; outer.style.height = window.innerHeight + 'px'; outer.style.overflow = 'hidden'; }
+      if (document.body.style.background !== 'rgb(232, 241, 253)') document.body.style.background = '#E8F1FD';
       return;
     }
-    var narrow = window.innerWidth <= 520;
-    if (!narrow){ frame.style.transform = ''; return; }
-    var outer = frame.parentElement;
-    while (outer && outer.offsetHeight === 0) outer = outer.parentElement;
-    if (outer){ outer.style.padding = '0'; outer.style.minHeight = '0'; outer.style.height = window.innerHeight + 'px'; outer.style.overflow = 'hidden'; }
-    var s = Math.min(window.innerWidth / W, window.innerHeight / H);
-    frame.style.transformOrigin = 'center center';
-    frame.style.transform = 'scale(' + s + ')';
+    chrome(false);                       // вернулись на широкий экран — макет как был
+    var o = {};
+    try { o = JSON.parse(frame.getAttribute('data-orig') || '{}'); } catch(e){}
+    frame.style.width = o.w || (W + 'px');
+    frame.style.height = o.h || (H + 'px');
+    frame.style.borderRadius = o.br || '48px';
+    frame.style.boxShadow = o.bs || '';
+    frame.style.transform = '';
+    if (outer){ outer.style.padding = ''; outer.style.minHeight = ''; outer.style.height = ''; outer.style.overflow = ''; }
   }
   // Карточки в прокручиваемых колонках не должны сжиматься: у части из них
   // overflow:hidden, и сжатие срезает содержимое (например, строку «Поддержка»).
@@ -271,41 +307,6 @@ input::placeholder{color:#64748B}
   }
   function tick(){ fit(); unshrink(); moments(); adaptToDevice(); }
 
-  // Диагностика на реальном телефоне: открыть ссылку с ?diag=1
-  if (/[?&]diag=1/.test(location.search)) window.addEventListener('load', function(){
-    var i = Haptics.info(), s = insets();
-    var box = document.createElement('div');
-    box.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#0F1E3D;color:#fff;' +
-      'font:13px/1.5 -apple-system,system-ui,sans-serif;padding:calc(env(safe-area-inset-top) + 16px) 16px 16px;overflow:auto';
-    box.innerHTML =
-      '<div style="font-size:19px;font-weight:800;margin-bottom:10px">Проверка устройства</div>' +
-      '<div>Экран: <b>' + window.innerWidth + '×' + window.innerHeight + '</b> · плотность ' + (window.devicePixelRatio || 1) + '</div>' +
-      '<div>Безопасные зоны: сверху <b>' + s.top + '</b>, снизу <b>' + s.bottom + '</b></div>' +
-      '<div>Установлено на экран: <b>' + (i.standalone ? 'да' : 'нет') + '</b></div>' +
-      '<div>Vibration API: <b>' + (i.vibrateApi ? 'есть (Android)' : 'нет (iPhone)') + '</b></div>' +
-      '<div>Переключатель iOS 17.4+: <b>' + (i.switchSupported ? 'есть' : 'нет') + '</b></div>' +
-      '<div style="margin-top:6px;opacity:.6;font-size:11px;word-break:break-all">' + i.ua + '</div>' +
-      '<div style="margin-top:16px;font-weight:700">Нажмите — должно отдать в палец:</div>' +
-      '<div id="dg" style="display:flex;flex-direction:column;gap:10px;margin-top:10px"></div>' +
-      '<div id="dgLog" style="margin-top:16px;font-size:12px;opacity:.75"></div>';
-    document.body.appendChild(box);
-    var wrap = box.querySelector('#dg');
-    [['tick','Обычный тап'],['soft','Мягкий (шторка)'],['warn','Предупреждение'],['success','Успех']].forEach(function(p){
-      var b = document.createElement('div');
-      b.textContent = p[1];
-      b.style.cssText = 'height:52px;border-radius:14px;background:#2563EB;display:flex;align-items:center;justify-content:center;font-weight:600;cursor:pointer';
-      b.addEventListener('pointerdown', function(){
-        var how = Haptics.fire(p[0]);
-        box.querySelector('#dgLog').textContent = 'Последнее: ' + p[0] + ' → ' + how;
-      });
-      wrap.appendChild(b);
-    });
-    var snd = document.createElement('div');
-    snd.textContent = 'Включить звук и повторить';
-    snd.style.cssText = 'height:52px;border-radius:14px;background:#1E3A8A;display:flex;align-items:center;justify-content:center;font-weight:600;cursor:pointer';
-    snd.addEventListener('pointerdown', function(){ Haptics.enableSound(true); Haptics.fire('soft'); });
-    wrap.appendChild(snd);
-  });
   ['resize','orientationchange','load'].forEach(function(e){ window.addEventListener(e, tick); });
   new MutationObserver(tick).observe(document.documentElement, {childList:true, subtree:true});
   setTimeout(tick, 60); setTimeout(tick, 400);
