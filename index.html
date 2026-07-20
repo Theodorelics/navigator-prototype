@@ -22,7 +22,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#E7EBF1;font-family:'Inter',system-ui,sans-serif}
+/* Ощущение приложения, а не сайта: без серой вспышки по тапу, без задержки
+   двойного тапа, без выделения текста на кнопках и без «резинки» прокрутки */
+*{-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#E7EBF1;font-family:'Inter',system-ui,sans-serif;
+  touch-action:manipulation;overscroll-behavior:none;
+  -webkit-user-select:none;user-select:none}
+input,textarea{-webkit-user-select:text;user-select:text}
 a{color:#2563EB;text-decoration:none}
 a:hover{color:#1D4ED8}
 input{font-family:'Inter',system-ui,sans-serif}
@@ -58,6 +64,70 @@ input::placeholder{color:#64748B}
 // Демо открывают с телефона: вписываем макет 393×852 в экран целиком,
 // иначе flex сжимает рамку по ширине и срезает таб-бар.
 (function(){
+  // ── Тактильная отдача ───────────────────────────────────────────────────
+  // Android: обычный Vibration API. iOS: он запрещён в Safari, но системный
+  // переключатель (<input type="checkbox" switch>, iOS 17.4+) при переключении
+  // сам играет хаптик — держим скрытый и «щёлкаем» его программно.
+  var Haptics = (function(){
+    var canVibrate = typeof navigator.vibrate === 'function';
+    var sw = null, lastAt = 0;
+    function iosSwitch(){
+      if (sw) return sw;
+      var label = document.createElement('label');
+      label.setAttribute('aria-hidden', 'true');
+      label.style.cssText = 'position:fixed;bottom:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden';
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.setAttribute('switch', '');
+      input.tabIndex = -1;
+      label.appendChild(input);
+      document.body.appendChild(label);
+      sw = label;
+      return sw;
+    }
+    function pulse(ms){
+      if (canVibrate){ try { navigator.vibrate(ms); } catch(e){} return; }
+      try { iosSwitch().click(); } catch(e){}
+    }
+    function fire(kind){
+      var now = Date.now();
+      if (now - lastAt < 40) return;            // не «трещать» на быстрых тапах
+      lastAt = now;
+      if (kind === 'success'){ pulse([14, 45, 28]); if (!canVibrate) setTimeout(function(){ pulse(0); }, 130); return; }
+      if (kind === 'warn'){ pulse([22, 60, 22]); if (!canVibrate) setTimeout(function(){ pulse(0); }, 110); return; }
+      if (kind === 'soft'){ pulse(14); return; }
+      pulse(8);                                  // tick — обычный тап
+    }
+    return {fire: fire};
+  })();
+
+  // Тап по любому интерактивному элементу — короткий тик.
+  document.addEventListener('pointerdown', function(e){
+    var n = e.target;
+    for (var i = 0; n && i < 5; i++, n = n.parentElement){
+      if (n.nodeType === 1 && getComputedStyle(n).cursor === 'pointer'){ Haptics.fire('tick'); return; }
+    }
+  }, {passive: true, capture: true});
+
+  // Смысловые моменты: успех записи/оплаты, тост, открытие шторки.
+  var seen = {screen: '', toast: false, sheet: false};
+  function moments(){
+    var scr = document.querySelector('[data-screen-label]');
+    var label = scr ? scr.getAttribute('data-screen-label') : '';
+    if (label !== seen.screen){
+      if (/Успех/.test(label)) Haptics.fire('success');
+      seen.screen = label;
+    }
+    var toast = !!document.querySelector('[style*="z-index: 70"]');   // всплывающая подсказка
+    if (toast && !seen.toast) Haptics.fire('warn');
+    seen.toast = toast;
+    // Шторка = слой на весь экран (inset:0). Полоску home внизу рамки,
+    // у которой тот же z-index, сюда пускать нельзя — иначе признак «залипает».
+    var sheet = !!document.querySelector('[style*="inset: 0px"][style*="z-index: 60"]');
+    if (sheet && !seen.sheet) Haptics.fire('soft');
+    seen.sheet = sheet;
+  }
+
   var W = 393, H = 852;
   // «Установленный» режим (добавлено на экран «Домой»): системная строка статуса
   // и полоска home настоящие, поэтому макетную рамку телефона убираем целиком.
@@ -106,7 +176,7 @@ input::placeholder{color:#64748B}
       }
     }
   }
-  function tick(){ fit(); unshrink(); }
+  function tick(){ fit(); unshrink(); moments(); }
   ['resize','orientationchange','load'].forEach(function(e){ window.addEventListener(e, tick); });
   new MutationObserver(tick).observe(document.documentElement, {childList:true, subtree:true});
   setTimeout(tick, 60); setTimeout(tick, 400);
