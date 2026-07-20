@@ -70,36 +70,86 @@ input::placeholder{color:#64748B}
   // сам играет хаптик — держим скрытый и «щёлкаем» его программно.
   var Haptics = (function(){
     var canVibrate = typeof navigator.vibrate === 'function';
-    var sw = null, lastAt = 0;
+    var sw = null, lastAt = 0, audio = null, soundOn = /[?&]sound=1/.test(location.search);
+    var log = [];
+    // iOS: Vibration API запрещён, но переключатель (iOS 17.4+) играет системный
+    // хаптик при переключении. Держим его в DOM видимым для движка, но невидимым
+    // глазу: display:none и нулевой размер отключают отдачу, поэтому так нельзя.
     function iosSwitch(){
       if (sw) return sw;
       var label = document.createElement('label');
       label.setAttribute('aria-hidden', 'true');
-      label.style.cssText = 'position:fixed;bottom:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden';
+      label.style.cssText = 'position:fixed;left:-1px;bottom:-1px;width:44px;height:26px;' +
+        'opacity:.001;pointer-events:none;z-index:-1;transform:scale(.05)';
       var input = document.createElement('input');
       input.type = 'checkbox';
       input.setAttribute('switch', '');
       input.tabIndex = -1;
+      input.style.cssText = 'width:44px;height:26px;margin:0';
       label.appendChild(input);
       document.body.appendChild(label);
-      sw = label;
+      sw = {label: label, input: input};
       return sw;
     }
+    function iosTick(){
+      var s = iosSwitch();
+      try { s.label.click(); } catch(e){}          // основной путь
+      try { s.input.click(); } catch(e){}          // запасной
+    }
+    function beep(freq, ms){
+      if (!soundOn) return;
+      try {
+        if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+        if (audio.state === 'suspended') audio.resume();
+        var o = audio.createOscillator(), g = audio.createGain();
+        o.type = 'sine'; o.frequency.value = freq;
+        g.gain.setValueAtTime(0.0001, audio.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.06, audio.currentTime + 0.008);
+        g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + ms / 1000);
+        o.connect(g); g.connect(audio.destination);
+        o.start(); o.stop(audio.currentTime + ms / 1000);
+      } catch(e){}
+    }
     function pulse(ms){
-      if (canVibrate){ try { navigator.vibrate(ms); } catch(e){} return; }
-      try { iosSwitch().click(); } catch(e){}
+      if (canVibrate){ try { navigator.vibrate(ms); } catch(e){} return 'vibrate'; }
+      iosTick(); return 'ios-switch';
     }
     function fire(kind){
       var now = Date.now();
       if (now - lastAt < 40) return;            // не «трещать» на быстрых тапах
       lastAt = now;
-      if (kind === 'success'){ pulse([14, 45, 28]); if (!canVibrate) setTimeout(function(){ pulse(0); }, 130); return; }
-      if (kind === 'warn'){ pulse([22, 60, 22]); if (!canVibrate) setTimeout(function(){ pulse(0); }, 110); return; }
-      if (kind === 'soft'){ pulse(14); return; }
-      pulse(8);                                  // tick — обычный тап
+      var how;
+      if (kind === 'success'){
+        how = pulse([18, 45, 34]); beep(880, 90);
+        if (!canVibrate){ setTimeout(iosTick, 120); setTimeout(iosTick, 240); }
+      } else if (kind === 'warn'){
+        how = pulse([26, 60, 26]); beep(420, 70);
+        if (!canVibrate) setTimeout(iosTick, 130);
+      } else if (kind === 'soft'){
+        how = pulse(22); beep(620, 45);
+      } else {
+        how = pulse(15); beep(760, 28);          // tick — обычный тап
+      }
+      log.push(kind + ':' + how);
+      if (log.length > 20) log.shift();
+      return how;
     }
-    return {fire: fire};
+    return {
+      fire: fire,
+      info: function(){
+        return {
+          vibrateApi: canVibrate,
+          switchSupported: (function(){ var i = document.createElement('input'); i.type = 'checkbox'; i.setAttribute('switch',''); return 'switch' in i || i.hasAttribute('switch'); })(),
+          soundOn: soundOn,
+          standalone: window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches,
+          ua: navigator.userAgent,
+          recent: log.slice(-6)
+        };
+      },
+      enableSound: function(v){ soundOn = v; }
+    };
   })();
+  window.__haptics = Haptics;
 
   // Тап по любому интерактивному элементу — короткий тик.
   document.addEventListener('pointerdown', function(e){
@@ -126,6 +176,49 @@ input::placeholder{color:#64748B}
     var sheet = !!document.querySelector('[style*="inset: 0px"][style*="z-index: 60"]');
     if (sheet && !seen.sheet) Haptics.fire('soft');
     seen.sheet = sheet;
+  }
+
+  // ── Подстройка под конкретный аппарат ───────────────────────────────────
+  // Читаем реальные безопасные зоны устройства: у iPhone с «островом» сверху
+  // ~59px, с чёлкой ~47px, у SE/Android с кнопкой — ~20px и меньше.
+  // ВАЖНО: замер трогает DOM, а мы вызываемся из MutationObserver — поэтому
+  // считаем один раз и кешируем, иначе наблюдатель уходит в бесконечный цикл.
+  var _ins = null;
+  function insets(force){
+    if (_ins && !force) return _ins;
+    var p = document.createElement('div');
+    p.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;visibility:hidden;' +
+      'padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)';
+    (document.body || document.documentElement).appendChild(p);
+    var cs = getComputedStyle(p);
+    _ins = {top: parseFloat(cs.paddingTop) || 0, bottom: parseFloat(cs.paddingBottom) || 0};
+    p.parentNode.removeChild(p);
+    return _ins;
+  }
+  ['resize','orientationchange'].forEach(function(e){ window.addEventListener(e, function(){ insets(true); }); });
+  // Раскладка спроектирована под «остров» (66–70px сверху, 24px снизу).
+  // На других аппаратах пересчитываем, чтобы контент не жался и не подлезал.
+  function adaptToDevice(){
+    // Только в установленном режиме: в браузере рамка рисует собственную шапку,
+    // и отступы макета (66–70px) обязаны её обходить — трогать их нельзя.
+    if (!STANDALONE) return;
+    var i = insets();
+    var top = Math.max(i.top + 12, 26);
+    var bottom = Math.max(i.bottom, 10);
+    var els = document.querySelectorAll('div');
+    for (var k = 0; k < els.length; k++){
+      var el = els[k], st = el.getAttribute('style') || '';
+      // Помечаем элемент один раз: после первой правки инлайн-стиль меняется,
+      // и искать его по исходному значению уже нельзя.
+      if (!el.getAttribute('data-pad')){
+        if (/padding: (66|70)px 16px/.test(st)) el.setAttribute('data-pad', 'top');
+        else if (st.indexOf('padding: 8px 6px 24px') !== -1) el.setAttribute('data-pad', 'tab');
+        else continue;
+      }
+      var role = el.getAttribute('data-pad');
+      if (role === 'top' && el.style.paddingTop !== top + 'px') el.style.paddingTop = top + 'px';
+      if (role === 'tab' && el.style.paddingBottom !== (bottom + 14) + 'px') el.style.paddingBottom = (bottom + 14) + 'px';
+    }
   }
 
   var W = 393, H = 852;
@@ -176,7 +269,43 @@ input::placeholder{color:#64748B}
       }
     }
   }
-  function tick(){ fit(); unshrink(); moments(); }
+  function tick(){ fit(); unshrink(); moments(); adaptToDevice(); }
+
+  // Диагностика на реальном телефоне: открыть ссылку с ?diag=1
+  if (/[?&]diag=1/.test(location.search)) window.addEventListener('load', function(){
+    var i = Haptics.info(), s = insets();
+    var box = document.createElement('div');
+    box.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#0F1E3D;color:#fff;' +
+      'font:13px/1.5 -apple-system,system-ui,sans-serif;padding:calc(env(safe-area-inset-top) + 16px) 16px 16px;overflow:auto';
+    box.innerHTML =
+      '<div style="font-size:19px;font-weight:800;margin-bottom:10px">Проверка устройства</div>' +
+      '<div>Экран: <b>' + window.innerWidth + '×' + window.innerHeight + '</b> · плотность ' + (window.devicePixelRatio || 1) + '</div>' +
+      '<div>Безопасные зоны: сверху <b>' + s.top + '</b>, снизу <b>' + s.bottom + '</b></div>' +
+      '<div>Установлено на экран: <b>' + (i.standalone ? 'да' : 'нет') + '</b></div>' +
+      '<div>Vibration API: <b>' + (i.vibrateApi ? 'есть (Android)' : 'нет (iPhone)') + '</b></div>' +
+      '<div>Переключатель iOS 17.4+: <b>' + (i.switchSupported ? 'есть' : 'нет') + '</b></div>' +
+      '<div style="margin-top:6px;opacity:.6;font-size:11px;word-break:break-all">' + i.ua + '</div>' +
+      '<div style="margin-top:16px;font-weight:700">Нажмите — должно отдать в палец:</div>' +
+      '<div id="dg" style="display:flex;flex-direction:column;gap:10px;margin-top:10px"></div>' +
+      '<div id="dgLog" style="margin-top:16px;font-size:12px;opacity:.75"></div>';
+    document.body.appendChild(box);
+    var wrap = box.querySelector('#dg');
+    [['tick','Обычный тап'],['soft','Мягкий (шторка)'],['warn','Предупреждение'],['success','Успех']].forEach(function(p){
+      var b = document.createElement('div');
+      b.textContent = p[1];
+      b.style.cssText = 'height:52px;border-radius:14px;background:#2563EB;display:flex;align-items:center;justify-content:center;font-weight:600;cursor:pointer';
+      b.addEventListener('pointerdown', function(){
+        var how = Haptics.fire(p[0]);
+        box.querySelector('#dgLog').textContent = 'Последнее: ' + p[0] + ' → ' + how;
+      });
+      wrap.appendChild(b);
+    });
+    var snd = document.createElement('div');
+    snd.textContent = 'Включить звук и повторить';
+    snd.style.cssText = 'height:52px;border-radius:14px;background:#1E3A8A;display:flex;align-items:center;justify-content:center;font-weight:600;cursor:pointer';
+    snd.addEventListener('pointerdown', function(){ Haptics.enableSound(true); Haptics.fire('soft'); });
+    wrap.appendChild(snd);
+  });
   ['resize','orientationchange','load'].forEach(function(e){ window.addEventListener(e, tick); });
   new MutationObserver(tick).observe(document.documentElement, {childList:true, subtree:true});
   setTimeout(tick, 60); setTimeout(tick, 400);
