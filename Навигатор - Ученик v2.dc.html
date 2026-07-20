@@ -25,7 +25,7 @@ body{margin:0;background:#E7EBF1;font-family:'Inter',system-ui,sans-serif}
 a{color:#2563EB;text-decoration:none}
 a:hover{color:#1D4ED8}
 input{font-family:'Inter',system-ui,sans-serif}
-input::placeholder{color:#94A3B8}
+input::placeholder{color:#64748B}
 ::-webkit-scrollbar{display:none}
 @keyframes toastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 @keyframes popIn{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
@@ -36,6 +36,16 @@ input::placeholder{color:#94A3B8}
 @keyframes kenburns{from{transform:scale(1) translateY(0)}to{transform:scale(1.12) translateY(-14px)}}
 @keyframes riseIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
 @keyframes confDrift{from{transform:scale(.92) rotate(-3deg)}to{transform:scale(1.04) rotate(3deg)}}
+/* Уважаем системную настройку «Уменьшение движения» (Apple HIG): вместо
+   зумов и разлётов — мгновенная подача, анимации не убираются, а гасятся */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
 /* На телефоне рамка устройства масштабируется под экран — см. скрипт ниже */
 @media (max-width:520px){
   body{overflow:hidden}
@@ -115,47 +125,47 @@ input::placeholder{color:#94A3B8}
     <div>
       <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Вход в личный кабинет</div>
       <div style="margin-top:4px;font-size:13px;color:#64748B">Логин и пароль выдаёт администратор при заключении договора</div>
-      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Логин — например, ivanov.pa" autocapitalize="none" style="margin-top:14px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Логин — например, ivanov.pa" aria-label="Логин" name="login" autocomplete="username" autocapitalize="none" style="margin-top:14px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
       <div style="margin-top:9px;display:flex;align-items:center;gap:8px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:15px;height:52px;padding:0 8px 0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
-        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" placeholder="Пароль" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
-        <div onClick="{{togglePwd}}" style="width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:{{pwdEyeOp}}" style-active="background:#F1F4F8">
+        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" aria-label="Пароль" name="password" autocomplete="current-password" placeholder="Пароль" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+        <div onClick="{{togglePwd}}" style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;opacity:{{pwdEyeOp}}" style-active="background:#F1F4F8">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" stroke="#64748B" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" stroke="#64748B" stroke-width="1.8"/></svg>
         </div>
       </div>
       <div onClick="{{doEnter}}" style="margin-top:11px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{enterBg}};box-shadow:{{enterSh}};cursor:pointer" style-active="transform:scale(.98)">Войти</div>
       <div onClick="{{toCodeReg}}" style="margin-top:9px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14.5px;font-weight:600;color:#1E3A8A;background:rgba(37,99,235,.09);border:1px solid rgba(37,99,235,.18);cursor:pointer" style-active="transform:scale(.98)">Зарегистрироваться по коду</div>
-      <div style="margin-top:11px;text-align:center;font-size:13px;color:#64748B">Хотите учиться у нас? <span onClick="{{toReg}}" style="color:#2563EB;font-weight:600;cursor:pointer">Оставить заявку</span></div>
-      <div style="margin-top:5px;text-align:center;font-size:12px;color:#94A3B8">Забыли пароль? Обратитесь к администратору филиала</div>
+      <div style="margin-top:11px;text-align:center;font-size:13px;color:#64748B">Хотите учиться у нас? <span onClick="{{toReg}}" style="display:inline-block;padding:14px 10px;margin:-14px 0;color:#2563EB;font-weight:600;cursor:pointer">Оставить заявку</span></div>
+      <div style="margin-top:5px;text-align:center;font-size:12px;color:#64748B">Забыли пароль? Обратитесь к администратору филиала</div>
     </div>
   </sc-if>
   <sc-if value="{{loginCodeReg}}">
     <div>
       <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Регистрация по коду</div>
       <div style="margin-top:4px;font-size:13px;color:#64748B;line-height:1.45">Код выдаёт администратор при заключении договора. Введите его и придумайте пароль</div>
-      <input value="{{invVal}}" onChange="{{onInv}}" placeholder="НВ-0000" style="margin-top:14px;width:100%;height:54px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;text-align:center;font-size:22px;font-weight:800;letter-spacing:4px;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
-      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Придумайте логин — например, anna.s" autocapitalize="none" style="margin-top:9px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <input value="{{invVal}}" onChange="{{onInv}}" aria-label="Код регистрации от администратора" name="invite-code" placeholder="НВ-0000" style="margin-top:14px;width:100%;height:54px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;text-align:center;font-size:22px;font-weight:800;letter-spacing:4px;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <input value="{{lgnVal}}" onChange="{{onLgn}}" placeholder="Придумайте логин — например, anna.s" aria-label="Новый логин" name="new-login" autocomplete="username" autocapitalize="none" style="margin-top:9px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
       <div style="margin-top:9px;display:flex;align-items:center;gap:8px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:15px;height:52px;padding:0 8px 0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
-        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" placeholder="Придумайте пароль" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
-        <div onClick="{{togglePwd}}" style="width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:{{pwdEyeOp}}" style-active="background:#F1F4F8">
+        <input value="{{pwdVal}}" onChange="{{onPwd}}" type="{{pwdType}}" aria-label="Новый пароль" name="new-password" autocomplete="new-password" placeholder="Придумайте пароль" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+        <div onClick="{{togglePwd}}" style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;opacity:{{pwdEyeOp}}" style-active="background:#F1F4F8">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" stroke="#64748B" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" stroke="#64748B" stroke-width="1.8"/></svg>
         </div>
       </div>
       <div onClick="{{codeRegGo}}" style="margin-top:11px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{codeRegBg}};box-shadow:{{codeRegSh}};cursor:pointer" style-active="transform:scale(.98)">Зарегистрироваться</div>
-      <div onClick="{{backToPhone}}" style="margin-top:12px;text-align:center;font-size:13.5px;color:#64748B;cursor:pointer">У меня уже есть аккаунт — <span style="color:#2563EB;font-weight:600">войти</span></div>
+      <div onClick="{{backToPhone}}" style="margin-top:12px;text-align:center;font-size:13.5px;color:#64748B;cursor:pointer;padding:13px 0;margin-top:0">У меня уже есть аккаунт — <span style="color:#2563EB;font-weight:600">войти</span></div>
     </div>
   </sc-if>
   <sc-if value="{{loginReg}}">
     <div>
       <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">Заявка на обучение</div>
       <div style="margin-top:4px;font-size:13px;color:#64748B">Перезвоним, подберём филиал, группу и инструктора</div>
-      <input value="{{regName}}" onChange="{{onRegName}}" placeholder="Как вас зовут?" style="margin-top:14px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
+      <input value="{{regName}}" onChange="{{onRegName}}" aria-label="Ваше имя" name="name" autocomplete="name" placeholder="Как вас зовут?" style="margin-top:14px;width:100%;height:52px;border-radius:15px;border:1.5px solid #E2E8F0;background:#FFFFFF;padding:0 16px;font-size:15.5px;font-weight:600;color:#0F1E3D;outline:none;box-shadow:0 2px 8px rgba(15,30,61,.04)" style-focus="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.14)">
       <div style="margin-top:9px;display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1.5px solid #E2E8F0;border-radius:15px;height:52px;padding:0 16px;box-shadow:0 2px 8px rgba(15,30,61,.04)">
         <span style="font-size:15.5px;font-weight:600">+7</span>
-        <input value="{{phoneVal}}" onChange="{{onPhone}}" type="tel" placeholder="(999) 123-45-67" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
+        <input value="{{phoneVal}}" onChange="{{onPhone}}" type="tel" aria-label="Номер телефона" name="phone" autocomplete="tel" placeholder="(999) 123-45-67" style="flex:1;border:none;outline:none;font-size:15.5px;font-weight:600;background:transparent;color:#0F1E3D;letter-spacing:.3px;min-width:0">
       </div>
       <div onClick="{{regGo}}" style="margin-top:11px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#FFFFFF;background:{{regBg}};box-shadow:{{regSh}};cursor:pointer" style-active="transform:scale(.98)">Оставить заявку</div>
-      <div style="margin-top:9px;display:flex;justify-content:center;gap:14px;font-size:11.5px;color:#94A3B8"><span>6 филиалов</span><span>·</span><span>АКПП и МКПП</span><span>·</span><span>рассрочка 0%</span></div>
-      <div onClick="{{backToPhone}}" style="margin-top:10px;text-align:center;font-size:13.5px;color:#64748B;cursor:pointer">У меня уже есть аккаунт — <span style="color:#2563EB;font-weight:600">войти</span></div>
+      <div style="margin-top:9px;display:flex;justify-content:center;gap:14px;font-size:11.5px;color:#64748B"><span>6 филиалов</span><span>·</span><span>АКПП и МКПП</span><span>·</span><span>рассрочка 0%</span></div>
+      <div onClick="{{backToPhone}}" style="margin-top:10px;text-align:center;font-size:13.5px;color:#64748B;cursor:pointer;padding:13px 0;margin-top:0">У меня уже есть аккаунт — <span style="color:#2563EB;font-weight:600">войти</span></div>
     </div>
   </sc-if>
   </div>
@@ -211,7 +221,7 @@ input::placeholder{color:#94A3B8}
   </div>
   </sc-if>
   <sc-if value="{{bookedCard}}">
-    <div style="background:#FFFFFF;border-radius:20px;padding:15px 18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;gap:12px">
+    <div style="background:#FFFFFF;border-radius:20px;padding:15px 18px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;gap:12px">
       <div style="flex:1">
         <div style="font-size:16px;font-weight:700">{{bookedDate}} · {{bookedTime}}</div>
         <div style="margin-top:2px;font-size:13px;color:#64748B">Доп занятие · Сергей Петров · м. Ясенево</div>
@@ -219,13 +229,13 @@ input::placeholder{color:#94A3B8}
       <div style="background:#EAFBF1;color:#15803D;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;flex:none">Новое</div>
     </div>
   </sc-if>
-  <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);position:relative;overflow:hidden;z-index:0;flex:none">
+  <div style="background:#FFFFFF;border-radius:20px;padding:18px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);position:relative;overflow:hidden;z-index:0;flex:none">
     <img src="assets/generated/d2-hours.webp" alt="" style="position:absolute;top:6px;right:10px;width:112px;opacity:.5;z-index:-1;pointer-events:none">
     <div style="font-size:12px;font-weight:600;color:#64748B">Баланс часов</div>
     <div style="margin-top:10px;display:flex;text-align:center">
       <div style="flex:1"><div style="font-size:27px;font-weight:800;letter-spacing:-.5px">{{cityHours}}</div><div style="font-size:12px;color:#64748B;margin-top:2px">Город</div></div>
       <div style="width:1px;background:#EDF0F4"></div>
-      <div style="flex:1"><div style="font-size:27px;font-weight:800;letter-spacing:-.5px;color:#9CA3AF">0</div><div style="font-size:12px;color:#64748B;margin-top:2px">Площадка</div></div>
+      <div style="flex:1"><div style="font-size:27px;font-weight:800;letter-spacing:-.5px;color:#64748B">0</div><div style="font-size:12px;color:#64748B;margin-top:2px">Площадка</div></div>
       <div style="width:1px;background:#EDF0F4"></div>
       <div style="flex:1"><div style="font-size:27px;font-weight:800;letter-spacing:-.5px">{{dopH}}</div><div style="font-size:12px;color:#64748B;margin-top:2px">Доп</div></div>
     </div>
@@ -245,15 +255,15 @@ input::placeholder{color:#94A3B8}
     </div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-    <div onClick="{{qBook}}" style="height:88px;border-radius:18px;background:#FFFFFF;color:#2563EB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
+    <div onClick="{{qBook}}" style="height:88px;border-radius:18px;background:#FFFFFF;color:#2563EB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
       <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12.6" fill="currentColor" opacity=".18"/><circle cx="16" cy="16" r="12.6" stroke="currentColor" stroke-width="2.1"/><circle cx="16" cy="16" r="3.7" stroke="currentColor" stroke-width="2.1"/><path d="M4.2 13.2c7.6 2.5 16 2.5 23.6 0M16 19.7v8.7" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>
       <div style="font-size:12.5px;font-weight:600">Записаться</div>
     </div>
-    <div onClick="{{qPay}}" style="height:88px;border-radius:18px;background:#FFFFFF;color:#2563EB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
+    <div onClick="{{qPay}}" style="height:88px;border-radius:18px;background:#FFFFFF;color:#2563EB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
       <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12.6" fill="currentColor" opacity=".16"/><circle cx="16" cy="16" r="12.6" stroke="currentColor" stroke-width="2.1"/><path d="M13.2 23.4V9.2h5a4 4 0 010 8h-5M11.5 20.4h7" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <div style="font-size:12.5px;font-weight:600">Оплатить</div>
     </div>
-    <div onClick="{{qTheory}}" style="height:88px;border-radius:18px;background:#FFFFFF;color:#2563EB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
+    <div onClick="{{qTheory}}" style="height:88px;border-radius:18px;background:#FFFFFF;color:#2563EB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
       <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M16 9.6C13.6 7.9 10.8 7.1 7 7.1H4.6v16.8H7c3.8 0 6.6.8 9 2.5 2.4-1.7 5.2-2.5 9-2.5h2.4V7.1H25c-3.8 0-6.6.8-9 2.5z" fill="currentColor" opacity=".16"/><path d="M16 9.6C13.6 7.9 10.8 7.1 7 7.1H4.6v16.8H7c3.8 0 6.6.8 9 2.5 2.4-1.7 5.2-2.5 9-2.5h2.4V7.1H25c-3.8 0-6.6.8-9 2.5zM16 9.6v16.8" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"/></svg>
       <div style="font-size:12.5px;font-weight:600">Теория</div>
     </div>
@@ -290,11 +300,11 @@ input::placeholder{color:#94A3B8}
     <div style="margin-top:9px;text-align:center;font-size:12px;color:#64748B">{{pkgLeftTxt}}</div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-    <div onClick="{{toOthers}}" style="background:#FFFFFF;border-radius:20px;padding:15px;display:flex;flex-direction:column;gap:9px;cursor:pointer;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
+    <div onClick="{{toOthers}}" style="background:#FFFFFF;border-radius:20px;padding:15px;display:flex;flex-direction:column;gap:9px;cursor:pointer;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
       <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#EFF4FF,#DBEAFE);color:#2563EB;display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="9.2" cy="8.4" r="3.3" fill="currentColor" opacity=".18"/><circle cx="9.2" cy="8.4" r="3.3" stroke="currentColor" stroke-width="1.8"/><path d="M3.4 19c1.1-3 3.2-4.5 5.8-4.5S14 16 15.1 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="17" cy="9.6" r="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M16.2 15c2.3 0 4 1.2 4.8 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
       <div><div style="font-size:14.5px;font-weight:700">Другой инструктор</div><div style="font-size:12px;color:#64748B;margin-top:2px">Ещё 3 в вашем городе</div></div>
     </div>
-    <div onClick="{{toExams}}" style="background:#FFFFFF;border-radius:20px;padding:15px;display:flex;flex-direction:column;gap:9px;cursor:pointer;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
+    <div onClick="{{toExams}}" style="background:#FFFFFF;border-radius:20px;padding:15px;display:flex;flex-direction:column;gap:9px;cursor:pointer;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.97)">
       <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#EFF4FF,#DBEAFE);color:#2563EB;display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M5.6 4.4h13.2v8.8H5.6z" fill="currentColor" opacity=".18"/><path d="M5.6 21V3.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M5.6 4.4h13.2v8.8H5.6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M5.6 4.4h3.3v2.9h3.3V4.4h3.3v2.9h3.3M5.6 10.3h3.3v2.9h3.3v-2.9h3.3v2.9h3.3" stroke="currentColor" stroke-width="1.5"/></svg></div>
       <div><div style="font-size:14.5px;font-weight:700">Экзамен</div><div style="font-size:12px;color:#64748B;margin-top:2px">Внутренний и ГИБДД</div></div>
     </div>
@@ -343,7 +353,7 @@ input::placeholder{color:#94A3B8}
   </div>
   <div style="font-size:13px;font-weight:600;color:#64748B;margin-top:6px">Другие инструкторы</div>
   <sc-for list="{{others}}" as="p" hint-placeholder-count="3">
-    <div onClick="{{p.onPick}}" style="background:#FFFFFF;border-radius:20px;padding:15px;display:flex;gap:12px;align-items:center;cursor:pointer;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.985)">
+    <div onClick="{{p.onPick}}" style="background:#FFFFFF;border-radius:20px;padding:15px;display:flex;gap:12px;align-items:center;cursor:pointer;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.985)">
       <div style="width:62px;height:62px;flex:none"><x-import src="assets/generated/slot-inst-{{p.id}}.webp" component-from-global-scope="image-slot" from="./image-slot.js" id="slot-inst-{{p.id}}" shape="circle" placeholder="{{p.ph}}" hint-size="62px,62px" style="width:62px;height:62px"></x-import></div>
       <div style="flex:1;min-width:0">
         <div style="font-size:16.5px;font-weight:700">{{p.name}}</div>
@@ -382,7 +392,7 @@ input::placeholder{color:#94A3B8}
 <div style="flex:1;overflow-y:auto;padding:12px 16px 8px">
   <div style="display:flex;justify-content:space-between;align-items:baseline">
     <div style="font-size:13px;font-weight:600;color:#64748B">Свободное время</div>
-    <div style="font-size:12px;color:#9CA3AF">серые — заняты</div>
+    <div style="font-size:12px;color:#64748B">серые — заняты</div>
   </div>
   <sc-if value="{{hasSlots}}" hint-placeholder-val="{{ true }}">
     <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -392,7 +402,7 @@ input::placeholder{color:#94A3B8}
     </div>
   </sc-if>
   <sc-if value="{{noSlots}}">
-    <div style="margin-top:12px;background:#FFFFFF;border-radius:20px;padding:22px 18px;text-align:center;font-size:14px;color:#64748B;line-height:1.5;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">На {{dayFull}} свободных слотов нет.<br>Выберите другой день.</div>
+    <div style="margin-top:12px;background:#FFFFFF;border-radius:20px;padding:22px 18px;text-align:center;font-size:14px;color:#64748B;line-height:1.5;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">На {{dayFull}} свободных слотов нет.<br>Выберите другой день.</div>
   </sc-if>
 </div>
 <div style="padding:10px 16px 14px;flex:none">
@@ -410,7 +420,7 @@ input::placeholder{color:#94A3B8}
   <div><div style="font-size:18px;font-weight:700;letter-spacing:-.3px">Подтверждение</div><div style="font-size:12.5px;color:#64748B">{{bookLabel}}</div></div>
 </div>
 <div style="flex:1;overflow-y:auto;padding:4px 16px 8px;display:flex;flex-direction:column;gap:12px">
-  <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+  <div style="background:#FFFFFF;border-radius:20px;padding:18px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
     <div style="font-size:27px;font-weight:800;letter-spacing:-.5px">{{confTime}}</div>
     <div style="font-size:14px;color:#64748B;margin-top:2px">{{confDate}}</div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid #EDF0F4;display:flex;flex-direction:column;gap:9px">
@@ -434,7 +444,7 @@ input::placeholder{color:#94A3B8}
     </div>
   </div>
   <sc-if value="{{isExtra}}">
-    <div style="background:#FFFFFF;border-radius:20px;padding:15px 18px;display:flex;justify-content:space-between;align-items:baseline;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+    <div style="background:#FFFFFF;border-radius:20px;padding:15px 18px;display:flex;justify-content:space-between;align-items:baseline;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
       <span style="font-size:14px;color:#64748B">Доп занятие · 1,5 ч</span><span style="font-size:21px;font-weight:800;letter-spacing:-.3px">2 000 ₽</span>
     </div>
   </sc-if>
@@ -455,7 +465,7 @@ input::placeholder{color:#94A3B8}
   <div style="font-size:18px;font-weight:700;letter-spacing:-.3px">Оплата</div>
 </div>
 <div style="flex:1;overflow-y:auto;padding:4px 16px 20px;display:flex;flex-direction:column;gap:12px">
-  <div style="background:#FFFFFF;border-radius:20px;padding:18px;display:flex;justify-content:space-between;align-items:center;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+  <div style="background:#FFFFFF;border-radius:20px;padding:18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
     <div><div style="font-size:15px;font-weight:700">Доп занятие</div><div style="font-size:13px;color:#64748B;margin-top:2px">{{confShort}} · {{confTime}}</div></div>
     <div style="font-size:23px;font-weight:800;letter-spacing:-.3px">2 000 ₽</div>
   </div>
@@ -469,12 +479,12 @@ input::placeholder{color:#94A3B8}
       <span style="color:#FFFFFF;font-size:15.5px;font-weight:600">Ждём подтверждение банка…</span>
     </sc-if>
   </div>
-  <div onClick="{{payCard}}" style="background:#FFFFFF;border-radius:16px;padding:15px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.985)">
+  <div onClick="{{payCard}}" style="background:#FFFFFF;border-radius:16px;padding:15px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)" style-active="transform:scale(.985)">
     <div style="width:36px;height:36px;border-radius:11px;background:#EFF4FF;display:flex;align-items:center;justify-content:center;flex:none"><img src="assets/generated/i-mir-card.webp" alt="" style="width:28px;height:28px;object-fit:contain"></div>
     <div style="flex:1;font-size:15px;font-weight:600">Банковская карта</div>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </div>
-  <div style="text-align:center;font-size:12px;color:#9CA3AF">Чек придёт по СМС после оплаты</div>
+  <div style="text-align:center;font-size:12px;color:#64748B">Чек придёт по СМС после оплаты</div>
 </div>
 </div>
 </sc-if>
@@ -486,7 +496,7 @@ input::placeholder{color:#94A3B8}
     <div style="width:92px;height:92px;border-radius:50%;background:linear-gradient(135deg,#34D399,#16A34A);display:flex;align-items:center;justify-content:center;animation:popIn .45s ease;box-shadow:0 16px 36px rgba(34,197,94,.35)"><svg width="42" height="42" viewBox="0 0 24 24" fill="none"><path d="M5 13l5 5L20 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div style="margin-top:22px;font-size:26px;font-weight:800;letter-spacing:-.5px">{{okTitle}}</div>
     <div style="margin-top:6px;font-size:14px;color:#64748B;text-align:center">{{confShort}}, {{confTime}} · {{instName}}</div>
-    <div style="margin-top:22px;background:#FFFFFF;border-radius:20px;padding:18px;width:100%;display:flex;flex-direction:column;gap:11px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+    <div style="margin-top:22px;background:#FFFFFF;border-radius:20px;padding:18px;width:100%;display:flex;flex-direction:column;gap:11px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
       <div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#475569"><span style="color:#22C55E;font-weight:800">✓</span>Занятие добавлено в календарь</div>
       <div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#475569"><span style="color:#22C55E;font-weight:800">✓</span>Чек отправлен по СМС</div>
       <div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#475569"><span style="color:#22C55E;font-weight:800">✓</span>Напомним за сутки и за 2 часа</div>
@@ -505,7 +515,7 @@ input::placeholder{color:#94A3B8}
   <div style="font-size:18px;font-weight:700;letter-spacing:-.3px">Экзамены</div>
 </div>
 <div style="flex:1;overflow-y:auto;padding:4px 16px 20px;display:flex;flex-direction:column;gap:12px">
-  <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+  <div style="background:#FFFFFF;border-radius:20px;padding:18px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
     <div style="font-size:16.5px;font-weight:700">Внутренний экзамен</div>
     <div style="font-size:13px;color:#64748B;margin-top:2px">Допуск откроется после выполнения условий</div>
     <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
@@ -518,9 +528,9 @@ input::placeholder{color:#94A3B8}
     </div>
     <div style="margin-top:10px;height:6px;border-radius:3px;background:#E9EEF4;overflow:hidden"><div style="width:93%;height:100%;background:linear-gradient(90deg,#FBBF24,#F59E0B);border-radius:3px"></div></div>
     <div style="margin-top:14px;height:48px;border-radius:14px;background:#E9EEF4;color:#94A3B8;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;cursor:default">Записаться</div>
-    <div style="margin-top:8px;text-align:center;font-size:12px;color:#9CA3AF">Откроется после 28 откатанных часов</div>
+    <div style="margin-top:8px;text-align:center;font-size:12px;color:#64748B">Откроется после 28 откатанных часов</div>
   </div>
-  <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);position:relative;overflow:hidden;flex:none">
+  <div style="background:#FFFFFF;border-radius:20px;padding:18px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);position:relative;overflow:hidden;flex:none">
     <img src="assets/generated/d7-finish-flag.webp" alt="" style="position:absolute;top:6px;right:10px;width:66px;opacity:.9;pointer-events:none">
     <div style="font-size:16.5px;font-weight:700">Экзамен в ГИБДД</div>
     <div style="font-size:13px;color:#64748B;margin-top:2px">Ближайшие даты в вашем отделении</div>
@@ -550,7 +560,7 @@ input::placeholder{color:#94A3B8}
 <img src="assets/generated/f3-theory.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:.07;z-index:-1;pointer-events:none">
 <div style="flex:1;overflow-y:auto;padding:70px 16px 20px;display:flex;flex-direction:column;gap:12px">
   <div style="margin:4px 0 2px;font-size:23px;font-weight:800;letter-spacing:-.5px">Теория</div>
-  <div style="background:#FFFFFF;border-radius:20px;padding:15px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+  <div style="background:#FFFFFF;border-radius:20px;padding:15px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
     <div style="width:100%;height:112px"><x-import src="assets/generated/slot-theory.webp" component-from-global-scope="image-slot" from="./image-slot.js" id="slot-theory" shape="rounded" radius="14" placeholder="Иллюстрация курса теории" hint-size="100%,112px" style="width:100%;height:112px"></x-import></div>
     <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
       <div style="background:linear-gradient(135deg,#3B82F6,#2563EB);color:#FFFFFF;font-size:11px;font-weight:800;padding:3px 9px;border-radius:99px;letter-spacing:.4px">ИСО ПРОФТЕХ</div>
@@ -617,10 +627,10 @@ input::placeholder{color:#94A3B8}
 <div style="flex:1;overflow-y:auto;padding:4px 16px 20px;display:flex;flex-direction:column;gap:12px">
   <div style="display:flex;justify-content:space-between;align-items:baseline">
     <div style="font-size:13px;font-weight:600;color:#64748B;white-space:nowrap;flex:none">Вопрос {{qNum}} из 3</div>
-    <div style="font-size:12px;color:#9CA3AF;white-space:nowrap">зачёт — от 2 верных</div>
+    <div style="font-size:12px;color:#64748B;white-space:nowrap">зачёт — от 2 верных</div>
   </div>
   <div style="height:6px;border-radius:3px;background:#E9EEF4;overflow:hidden"><div style="width:{{qPctW}};height:100%;background:linear-gradient(90deg,#60A5FA,#2563EB);border-radius:3px"></div></div>
-  <div style="background:#FFFFFF;border-radius:20px;padding:17px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+  <div style="background:#FFFFFF;border-radius:20px;padding:17px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
     <sc-if value="{{qHasImg}}">
       <div style="width:100%;height:150px;margin-bottom:13px"><x-import src="assets/generated/slot-pdd-q1.webp" component-from-global-scope="image-slot" from="./image-slot.js" id="slot-pdd-q1" shape="rounded" radius="12" placeholder="Дорожная ситуация к вопросу" hint-size="100%,150px" style="width:100%;height:150px"></x-import></div>
     </sc-if>
@@ -663,7 +673,7 @@ input::placeholder{color:#94A3B8}
   </div>
   <sc-if value="{{segIsFuture}}" hint-placeholder-val="{{ true }}">
     <sc-for list="{{futureL}}" as="l" hint-placeholder-count="2">
-      <div onClick="{{l.onTap}}" style="background:#FFFFFF;border-radius:20px;padding:17px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);cursor:pointer" style-active="transform:scale(.99)">
+      <div onClick="{{l.onTap}}" style="background:#FFFFFF;border-radius:20px;padding:17px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);cursor:pointer" style-active="transform:scale(.99)">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
           <div style="font-size:22px;font-weight:800;letter-spacing:-.4px">{{l.time}}</div>
           <sc-if value="{{l.isNew}}"><div style="background:#EAFBF1;color:#15803D;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;flex:none">Новое</div></sc-if>
@@ -687,7 +697,7 @@ input::placeholder{color:#94A3B8}
   </sc-if>
   <sc-if value="{{segIsPast}}">
     <sc-for list="{{pastL}}" as="l" hint-placeholder-count="3">
-      <div style="background:#FFFFFF;border-radius:20px;padding:17px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+      <div style="background:#FFFFFF;border-radius:20px;padding:17px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
           <div style="font-size:14.5px;font-weight:700;flex:1;min-width:0;white-space:nowrap">{{l.d}} · {{l.t}}</div>
           <div style="font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;background:{{l.sBg}};color:{{l.sC}};flex:none">{{l.status}}</div>
@@ -700,7 +710,7 @@ input::placeholder{color:#94A3B8}
             </sc-for>
           </div>
         </sc-if>
-        <sc-if value="{{l.note}}"><div style="margin-top:8px;font-size:12.5px;color:#9CA3AF">{{l.note}}</div></sc-if>
+        <sc-if value="{{l.note}}"><div style="margin-top:8px;font-size:12.5px;color:#64748B">{{l.note}}</div></sc-if>
       </div>
     </sc-for>
   </sc-if>
@@ -714,7 +724,7 @@ input::placeholder{color:#94A3B8}
 <img src="assets/generated/f5-profile.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:.07;z-index:-1;pointer-events:none">
 <div style="flex:1;overflow-y:auto;padding:70px 16px 20px;display:flex;flex-direction:column;gap:12px">
   <div style="margin:4px 0 2px;font-size:23px;font-weight:800;letter-spacing:-.5px">Профиль</div>
-  <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;gap:14px">
+  <div style="background:#FFFFFF;border-radius:20px;padding:18px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;gap:14px">
     <div style="width:58px;height:58px;flex:none"><x-import src="assets/generated/slot-avatar-anna.webp" component-from-global-scope="image-slot" from="./image-slot.js" id="slot-avatar-anna" shape="circle" placeholder="А" hint-size="58px,58px" style="width:58px;height:58px"></x-import></div>
     <div style="flex:1;min-width:0">
       <div style="font-size:18px;font-weight:800;letter-spacing:-.3px">Анна Смирнова</div>
@@ -725,7 +735,7 @@ input::placeholder{color:#94A3B8}
       </div>
     </div>
   </div>
-  <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+  <div style="background:#FFFFFF;border-radius:20px;padding:18px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div style="font-size:12px;font-weight:600;color:#64748B">Мой пакет</div>
       <div onClick="{{qPay}}" style="font-size:13px;font-weight:700;color:#2563EB;cursor:pointer">Пополнить</div>
@@ -733,7 +743,7 @@ input::placeholder{color:#94A3B8}
     <div style="margin-top:8px;font-size:16.5px;font-weight:700">Пакет «Город» · осталось {{cityHours}} ч</div>
     <div style="margin-top:3px;font-size:13px;color:#64748B">Договор № 2214-Б от 02.06.2026</div>
   </div>
-  <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
+  <div style="background:#FFFFFF;border-radius:20px;padding:18px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08)">
     <div style="font-size:12px;font-weight:600;color:#64748B">Мой филиал</div>
     <div style="margin-top:10px;display:flex;gap:12px;align-items:flex-start">
       <div style="width:4px;align-self:stretch;border-radius:2px;background:#F5A623;flex:none"></div>
@@ -761,7 +771,7 @@ input::placeholder{color:#94A3B8}
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M9 6l6 6-6 6" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </sc-if>
-  <div style="background:#FFFFFF;border-radius:20px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);overflow:hidden">
+  <div style="background:#FFFFFF;border-radius:20px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);overflow:hidden">
     <div style="display:flex;align-items:center;gap:12px;padding:15px 18px">
       <div style="width:34px;height:34px;border-radius:11px;background:#EFF4FF;color:#2563EB;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M6 10a6 6 0 1112 0c0 3.5 1 5 2 6H4c1-1 2-2.5 2-6z" fill="currentColor" opacity=".18"/><path d="M6 10a6 6 0 1112 0c0 3.5 1 5 2 6H4c1-1 2-2.5 2-6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 19.4a2.2 2.2 0 004 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
       <div style="flex:1;font-size:15px;font-weight:600">Уведомления</div>
@@ -776,7 +786,7 @@ input::placeholder{color:#94A3B8}
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </div>
-  <div onClick="{{logout}}" style="height:50px;border-radius:16px;background:#FFFFFF;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#DC2626;cursor:pointer" style-active="transform:scale(.98)">Выйти из аккаунта</div>
+  <div onClick="{{logout}}" style="height:50px;border-radius:16px;background:#FFFFFF;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#DC2626;cursor:pointer" style-active="transform:scale(.98)">Выйти из аккаунта</div>
 </div>
 </div>
 </sc-if>
@@ -799,7 +809,7 @@ input::placeholder{color:#94A3B8}
 </div>
 <div style="flex:1;overflow-y:auto;padding:4px 16px 20px;display:flex;flex-direction:column;gap:12px">
   <sc-if value="{{segCodes}}" hint-placeholder-val="{{ true }}">
-    <div style="background:#FFFFFF;border-radius:20px;padding:18px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;flex-direction:column;gap:13px">
+    <div style="background:#FFFFFF;border-radius:20px;padding:18px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;flex-direction:column;gap:13px">
       <div style="font-size:16px;font-weight:700">Новый код регистрации</div>
       <div>
         <div style="font-size:13px;font-weight:600;color:#64748B;margin-bottom:6px">Кому выдаём код</div>
@@ -867,7 +877,7 @@ input::placeholder{color:#94A3B8}
   </sc-if>
   <sc-if value="{{segStudents}}">
     <sc-for list="{{admStudents}}" as="p" hint-placeholder-count="4">
-      <div onClick="{{p.onTap}}" style="background:#FFFFFF;border-radius:18px;padding:14px 16px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;gap:12px;cursor:pointer" style-active="transform:scale(.985)">
+      <div onClick="{{p.onTap}}" style="background:#FFFFFF;border-radius:18px;padding:14px 16px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;gap:12px;cursor:pointer" style-active="transform:scale(.985)">
         <div style="flex:1;min-width:0">
           <div style="font-size:15px;font-weight:700">{{p.name}}</div>
           <div style="font-size:12.5px;color:#64748B;margin-top:2px">{{p.sub}}</div>
@@ -880,11 +890,11 @@ input::placeholder{color:#94A3B8}
         <div style="font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;background:{{p.sBg}};color:{{p.sC}};flex:none">{{p.status}}</div>
       </div>
     </sc-for>
-    <div style="text-align:center;font-size:12px;color:#9CA3AF;padding:2px 0 6px">Нажмите на ученика, чтобы сменить инструктора</div>
+    <div style="text-align:center;font-size:12px;color:#64748B;padding:2px 0 6px">Нажмите на ученика, чтобы сменить инструктора</div>
   </sc-if>
   <sc-if value="{{segInst}}">
     <sc-for list="{{admInstructors}}" as="p" hint-placeholder-count="4">
-      <div style="background:#FFFFFF;border-radius:18px;padding:14px 16px;border:1px solid #E9EEF6;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;gap:12px">
+      <div style="background:#FFFFFF;border-radius:18px;padding:14px 16px;box-shadow:0 2px 3px rgba(15,30,61,.02),0 14px 34px rgba(15,30,61,.08);display:flex;align-items:center;gap:12px">
         <div style="flex:1;min-width:0">
           <div style="font-size:15px;font-weight:700">{{p.name}}</div>
           <div style="font-size:12.5px;color:#64748B;margin-top:2px">{{p.sub}}</div>
@@ -903,23 +913,23 @@ input::placeholder{color:#94A3B8}
 <div style="position:relative;z-index:30;display:flex;align-items:flex-start;padding:8px 6px 24px;background:rgba(255,255,255,.88);backdrop-filter:blur(20px) saturate(160%);border-top:1px solid rgba(37,99,235,.10);box-shadow:0 -10px 26px rgba(15,30,61,.05);flex:none">
   <div onClick="{{tabHome}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:{{tHomeC}}">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4.6 10.2 12 4.2l7.4 6V19a1.6 1.6 0 01-1.6 1.6H6.2A1.6 1.6 0 014.6 19z" fill="currentColor" opacity=".16"/><path d="M3.3 10.7 12 3.6l8.7 7.1M5.6 10.1V19a1.6 1.6 0 001.6 1.6h9.6a1.6 1.6 0 001.6-1.6v-8.9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div style="font-size:10px;font-weight:600">Главная</div>
+    <div style="font-size:11px;font-weight:600">Главная</div>
   </div>
   <div onClick="{{tabBook}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:{{tBookC}}">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3.4" y="5.2" width="17.2" height="15.4" rx="3.2" fill="currentColor" opacity=".16"/><rect x="3.4" y="5.2" width="17.2" height="15.4" rx="3.2" stroke="currentColor" stroke-width="1.9"/><path d="M3.4 9.6h17.2M8 3.2v3.6M16 3.2v3.6M12 12.6v4.4M9.8 14.8h4.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-    <div style="font-size:10px;font-weight:600">Запись</div>
+    <div style="font-size:11px;font-weight:600">Запись</div>
   </div>
   <div onClick="{{tabLessons}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:{{tLessC}}">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.6" fill="currentColor" opacity=".16"/><circle cx="12" cy="12" r="8.6" stroke="currentColor" stroke-width="1.9"/><path d="M12 7.2V12l3.2 2.1" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div style="font-size:10px;font-weight:600">Занятия</div>
+    <div style="font-size:11px;font-weight:600">Занятия</div>
   </div>
   <div onClick="{{tabTheory}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:{{tTheoC}}">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 7.4C10.2 6.1 8.1 5.5 5.2 5.5H3.4v12.6h1.8c2.9 0 5 .6 6.8 1.9 1.8-1.3 3.9-1.9 6.8-1.9h1.8V5.5h-1.8c-2.9 0-5 .6-6.8 1.9z" fill="currentColor" opacity=".16"/><path d="M12 7.4C10.2 6.1 8.1 5.5 5.2 5.5H3.4v12.6h1.8c2.9 0 5 .6 6.8 1.9 1.8-1.3 3.9-1.9 6.8-1.9h1.8V5.5h-1.8c-2.9 0-5 .6-6.8 1.9zM12 7.4V20" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
-    <div style="font-size:10px;font-weight:600">Теория</div>
+    <div style="font-size:11px;font-weight:600">Теория</div>
   </div>
   <div onClick="{{tabProfile}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:{{tProfC}}">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="3.7" fill="currentColor" opacity=".16"/><circle cx="12" cy="8.2" r="3.7" stroke="currentColor" stroke-width="1.9"/><path d="M4.9 20.2c1.4-3.5 3.9-5.2 7.1-5.2s5.7 1.7 7.1 5.2" fill="currentColor" opacity=".16"/><path d="M4.9 20.2c1.4-3.5 3.9-5.2 7.1-5.2s5.7 1.7 7.1 5.2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-    <div style="font-size:10px;font-weight:600">Профиль</div>
+    <div style="font-size:11px;font-weight:600">Профиль</div>
   </div>
 </div>
 </sc-if>
@@ -967,7 +977,7 @@ input::placeholder{color:#94A3B8}
         <div style="margin-top:18px;font-size:18px;font-weight:800;letter-spacing:-.3px">{{topProcTitle}}</div>
         <div style="margin-top:6px;font-size:13.5px;color:#64748B;line-height:1.45">{{topProcSub}}</div>
         <div style="margin-top:14px;background:#F1F4F8;border-radius:12px;padding:8px 16px;font-size:15px;font-weight:800">{{topAmount}}</div>
-        <div style="margin-top:12px;font-size:12px;color:#9CA3AF">Не закрывайте приложение</div>
+        <div style="margin-top:12px;font-size:12px;color:#64748B">Не закрывайте приложение</div>
       </div>
     </sc-if>
     <sc-if value="{{topDone}}">
@@ -1242,7 +1252,7 @@ class Component extends DCLogic {
       {d:'Пн, 14 июля', t:'10:00–11:30', status:'Проведено', sBg:'#EAFBF1', sC:'#15803D', sub:'Вождение (город) · Сергей Петров', skills:['Старт и остановка','Движение задним ходом'], hasSkills:true, note:null},
       {d:'Сб, 11 июля', t:'08:00–09:30', status:'Неявка', sBg:'#FEECEC', sC:'#DC2626', sub:'Вождение (город) · Сергей Петров', skills:[], hasSkills:false, note:'Час списан по правилам отмены'}
     ];
-    const tabOn = '#2563EB', tabOff = '#94A3B8';
+    const tabOn = '#2563EB', tabOff = '#64748B';
     const bookTabs = ['u3','u4','u5','u6','u7','u8'];
     return {
       dw: 393, dh: 852,
@@ -1406,8 +1416,8 @@ class Component extends DCLogic {
         const done = i < st.tDone, cur = i === st.tDone;
         return {name, badge: done ? '✓' : String(i + 1),
           cBg: done ? '#EAFBF1' : (cur ? '#EFF4FF' : '#F1F4F8'),
-          cC: done ? '#15803D' : (cur ? '#2563EB' : '#94A3B8'),
-          nameC: (done || cur) ? '#0F1E3D' : '#94A3B8', cur,
+          cC: done ? '#15803D' : (cur ? '#2563EB' : '#64748B'),
+          nameC: (done || cur) ? '#0F1E3D' : '#64748B', cur,
           onTap: done ? (() => this.showToast('Тема уже пройдена')) :
             cur ? (() => { this.setState({tq:{i:0, sel:null, corr:0, done:false, topic:i + 1}}); this.go('u10q'); }) :
             (() => this.showToast('Сначала завершите тему ' + (st.tDone + 1)))};
@@ -1426,7 +1436,7 @@ class Component extends DCLogic {
         if (ans){
           if (j === q.right){ bg = '#EAFBF1'; bd = '#22C55E'; c = '#15803D'; }
           else if (j === st.tq.sel){ bg = '#FEECEC'; bd = '#EF4444'; c = '#DC2626'; }
-          else { bd = '#EDF0F4'; c = '#94A3B8'; }
+          else { bd = '#EDF0F4'; c = '#64748B'; }
         }
         return {label, bg, bd, c, cur: ans ? 'default' : 'pointer',
           onTap: ans ? null : (() => this.setState(s => ({tq: {...s.tq, sel: j, corr: s.tq.corr + (j === q.right ? 1 : 0)}})))};
